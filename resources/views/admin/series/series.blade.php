@@ -17,31 +17,32 @@
       <div class="box">
         
         <div class="box-body">
+          @if(!$series->isEmpty())
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                 <tr>
                   <th>Id</th>
                   <th>Title</th>
                   <th>Description</th>
-                  <th>Action</th>
+                 
                 </tr>
                 </thead>
                 <tbody>
 
-                @foreach($allPages as $key=>$page)  
+                @foreach($series as $key=>$series)  
                 <tr>
                   <td>{{$key + 1}}</td>
-                  <td>{{$page['title']}}</td>
-                  <td>{{substr(strip_tags($page['description']), 0, 50)}}..</td>    
-                  <td>
-                    <a class="btn btn-block btn-primary" href="{{route('createOrEdit')}}/{{$page['id']}}">Edit</a>
-                    <a class="btn btn-block btn-danger" href="{{route('deletePage')}}/{{$page['id']}}">Delete</a>
-                  </td>                  
+                  <td>{{$series['name']}}</td>
+                  <td>{{substr(strip_tags($series['description']), 0, 50)}}..</td>    
+                                  
                 </tr>
                 @endforeach
                 </tbody>
                
               </table>
+            @else
+              {{"Series doesn't exist"}}  
+            @endif  
         </div>
         <!-- /.box-body -->
         <div class="box-footer">
@@ -51,7 +52,7 @@
       </div>
       <!-- /.box -->
 
-    </section>
+    </section>  
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->

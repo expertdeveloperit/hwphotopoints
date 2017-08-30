@@ -23,8 +23,22 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href=""><i class="fa fa-circle-o"></i> Add New</a></li>
-            <li><a href=""><i class="fa fa-circle-o"></i> All Pages</a></li>
+            <li><a href="{{route('createOrEdit')}}"><i class="fa fa-circle-o"></i> Add New</a></li>
+            <li><a href="{{route('allPages')}}"><i class="fa fa-circle-o"></i> All Pages</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i> <span>Manage Series</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('allSeries')}}"><i class="fa fa-circle-o"></i> All Series</a></li>
+            <li><a href="{{route('specificSeries')}}/p"><i class="fa fa-circle-o"></i> P Series</a></li>
+            <li><a href="{{route('specificSeries')}}/s"><i class="fa fa-circle-o"></i> S Series</a></li>
+            <li><a href="{{route('specificSeries')}}/l"><i class="fa fa-circle-o"></i> L Series</a></li>
           </ul>
         </li>
       </ul>

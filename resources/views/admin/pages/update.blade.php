@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Add New Page
+        Update Page
         <small>Add New One</small>
       </h1>
     </section>
@@ -15,13 +15,13 @@
     <section class="content">
 
       <div class="box">
-        <form action="{{route('addNeworUpdate')}}" method="POST">
+        <form action="{{route('addNeworUpdate')}}/{{$page['id']}}" method="POST">
           {{ csrf_field() }}
           <div class="box box-primary">
               <div class="box-header with-border">
                 <div class="box-body">
                   <div class="form-group">
-                    <input type="text" name="title" class="form-control" id="titile" placeholder="Page Title">
+                    <input value="{{$page['title']}}" type="text" name="title" class="form-control" id="titile" placeholder="Page Title">
                   </div>
                 </div>
               </div>
@@ -29,7 +29,7 @@
           <div class="box-body">
              <div class="box-body pad">
                 <textarea id="editor" name="editor" rows="10" cols="80">
-                  
+                    {{$page['description']}}
                 </textarea>
               </div>
           </div>
