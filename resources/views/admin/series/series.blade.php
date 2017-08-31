@@ -9,6 +9,11 @@
         All Pages
         <small>manage your all pages here</small>
       </h1>
+       <ol class="breadcrumb">
+            <li><a href="{{route('allSeries')}}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{{route('specificSeries',session('seriesName'))}}">{{ucfirst(session('seriesName'))}} Series</a></li>
+            <li class="active"><a href="{{route('seriesView',$post['id'])}}">{{$post['title']}}</a></li>
+          </ol>
     </section>
 
     <!-- Main content -->
@@ -41,7 +46,7 @@
                
               </table>
             @else
-              {{"Series doesn't exist"}}  
+              <h4>{{"Series doesn't exist"}}  </h4>
             @endif  
         </div>
         <!-- /.box-body -->

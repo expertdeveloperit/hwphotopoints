@@ -15,7 +15,7 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="treeview">
+        <li class="treeview {{ (Request::is('admin/page'. '*') ? 'active' : '') }}">
           <a href="#">
             <i class="fa fa-files-o"></i> <span>Pages</span>
             <span class="pull-right-container">
@@ -27,7 +27,7 @@
             <li><a href="{{route('allPages')}}"><i class="fa fa-circle-o"></i> All Pages</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <li class="treeview {{ (Request::is('admin/series'. '*') ? 'active' : '') }}">
           <a href="#">
             <i class="fa fa-files-o"></i> <span>Manage Series</span>
             <span class="pull-right-container">

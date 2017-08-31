@@ -24,7 +24,7 @@
   <script src="{{asset('js/jquery.min.js')}}"></script>
   <script src="{{asset('js/ckeditor/ckeditor.js')}}"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-green sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 

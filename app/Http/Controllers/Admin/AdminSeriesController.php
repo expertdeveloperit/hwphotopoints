@@ -6,30 +6,69 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Series;
 use App\SeriesPosts;
+use Session;
+use Validator;
+use Redirect;
+use Input;
 class AdminSeriesController extends Controller
-{
+{   
+    // all series list
     public function index(){
     	$series = Series::all();
     	return view('admin.series.series',['series'=>$series]);
     }
 
+    //Specific Series List like P series, L series
     public function series(Request $request, $seriesName = null){
-    	if($seriesName){
-    		$data  = SeriesPosts::where('id','=',1)->get();	
-    		return view('admin.series.pseries',['data'=>$data]);
+        if($seriesName){
+            session(['seriesName' => $seriesName]);
+            $seriesData = Series::where("name",'=',$seriesName)->first();
+            if($seriesData){
+               $data  = SeriesPosts::where('series_id','=',$seriesData['id'])->get();
+            }
+            
+    		return view('admin.series.specificseries',['data'=>$data,'seriesName'=>$seriesName]);
     	}
     }
 
-    public function create(Request $request){
-    	$data = $request->all();
-    	$series = new Series;	
-    	$series->name = $data['name'];
-    	$series->description = $data['description'];
-    	$series->save();
-    	return redirect()->route('allSeries');
-    	
+    public function addNew(Request $request, $seriesName = null){
+        if(!empty($seriesName)){            
+            return view('admin.series.createupdate',['seriesName'=>$seriesName]);
+        }
+        return redirect()->route('specificSeries',$seriesName);
+        
+
+    }
+    
+
+    // Create new series post 
+    public function create(Request $request,$seriesName = null){
+        $data = $request->all();
+
+        $rules = array(
+            'title' => 'required',
+            'year'=>'required | numeric',
+        );
+        $validator = Validator::make($data, $rules);
+        if($validator->passes()){
+
+            $seriesData = Series::where("name",'=',$seriesName)->first();
+            if($seriesData){
+            	$series = new SeriesPosts;	
+                $series->series_id = $seriesData['id'];
+            	$series->title = $data['title'];
+                $series->year = $data['year'];
+                $series->description = "";
+                $series->save();
+            }    
+        	return redirect()->route('specificSeries',$seriesName);
+    	}else{
+            Session::flash('error',$validator->messages()->first());
+            return Redirect::back()->withInput($request->input());
+        }
     }
 
+    // edit the post and render the edit form
     public function edit(Request $request, $id = null){
         if(!empty($id)){
         	$editseries = SeriesPosts::find($id);
@@ -38,20 +77,36 @@ class AdminSeriesController extends Controller
       	return view('admin.series.createupdate');
     }
 
+    // update the series post data
     public function update(Request $request,$id=null){
     	$data = $request->all();
-    	$series = SeriesPosts::find($id);	
-    	$series->title = $data['title'];
-    	$series->year = $data['year'];
-    	$series->save();
-    	return redirect()->route('specificSeries');
-    	
+        $rules = array(
+            'title' => 'required',
+            'year'=>'required | numeric',
+        );
+        $validator = Validator::make($data, $rules);
+        if($validator->passes()){
+        	$series = SeriesPosts::find($id);	
+        	$series->title = $data['title'];
+        	$series->year = $data['year'];
+        	$series->save();
+            
+            $editseries = SeriesPosts::find($id);
+            Session::flash('message', 'Post data has been updated!'); 
+            return redirect()->route('editSeries',$id);
+    	}else{
+            Session::flash('error',$validator->messages()->first());
+            return Redirect::back()->withInput($request->input());
+        }
     }
 
-    public function delete(Request $request, $id = null){
+    //delete the series
+    public function delete(Request $request, $seriesName = null, $id = null){
         if($id){
-            Series::destroy($id);            
+            SeriesPosts::destroy($id);            
         }
-        return redirect()->route('allSeries');
+        Session::flash('message', ucfirst($seriesName).' Post has been deleted!');
+        return redirect()->route('specificSeries',$seriesName);
+        //return redirect()->route('allSeries');
     }
 }	

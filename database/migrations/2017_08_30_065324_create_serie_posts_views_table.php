@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeriePostsListTable extends Migration
+class CreateSeriePostsViewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSeriePostsListTable extends Migration
      */
     public function up()
     {
-        Schema::create('series_post_list', function (Blueprint $table) {
+        Schema::create('series_post_views', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('series_list_id')->unsigned();
             $table->foreign('series_list_id')->references('id')->on('series_posts');
@@ -32,6 +32,6 @@ class CreateSeriePostsListTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('series_post_list');
+        Schema::dropIfExists('series_post_views');
     }
 }
