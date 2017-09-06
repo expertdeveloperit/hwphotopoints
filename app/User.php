@@ -26,4 +26,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+     public function userMeta() {
+        return $this->hasOne('App\UserMeta','user_id');
+    }
+
+
+    //delete automatic related record from another table
+    protected static function boot() {
+        parent::boot();
+
+        static::deleting(function($user) { // before delete() method call this
+             $user->userMeta()->delete();
+             // do the rest of the cleanup...
+        });
+    }
 }

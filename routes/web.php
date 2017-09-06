@@ -19,11 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
-
-
 //admin Panel
 //pages
+Route::group(['middleware' => ['superadmin']], function () {
 Route::get('/admin/pages','Admin\PagesController@index')->name('allPages');
 Route::get('/admin/page/editupdate/{id?}','Admin\PagesController@createOrEdit')->name('createOrEdit');
 Route::post('/admin/page/addnew/{id?}','Admin\PagesController@addNeworUpdate')->name('addNeworUpdate');
@@ -47,3 +45,15 @@ Route::post('/admin/series/views/create/{postId?}','Admin\SeriesViewController@c
 Route::get('/admin/series/views/edit/{postId?}/{id?}','Admin\SeriesViewController@edit')->name('seriesViewEdit');
 Route::post('/admin/series/views/update/{postId?}/{id?}','Admin\SeriesViewController@update')->name('seriesViewUpdate');
 Route::get('/admin/series/views/delete/{postId?}/{id?}','Admin\SeriesViewController@delete')->name('seriesViewDelete');
+
+//Users
+Route::get('/admin/users','Admin\AdminUsersController@index')->name('usersList');
+Route::get('/admin/user/edit/{id?}','Admin\AdminUsersController@edit')->name('usersEdit');
+Route::get('/admin/user/create','Admin\AdminUsersController@create')->name('usersCreate');
+Route::post('/admin/user/update/{id?}','Admin\AdminUsersController@update')->name('userUpdate');
+Route::get('/admin/user/delete/{id?}','Admin\AdminUsersController@delete')->name('usersDelete');
+
+});
+
+
+

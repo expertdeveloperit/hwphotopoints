@@ -75,8 +75,7 @@ class SeriesViewController extends Controller
     	$data = $request->all();
         $rules = array(
             'image_view' => 'required',
-            'value'=>'required',
-            'pan_view'=>'required',
+            'value'=>'required'
         );
         $validator = Validator::make($data, $rules);
         if($validator->passes()){
@@ -84,7 +83,9 @@ class SeriesViewController extends Controller
         	$series = SeriesPostViews::find($id);	
         	$series->image_view = $data['image_view'];
         	$series->value = $data['value'];
-        	$series->pan_view = $data['pan_view'];
+            if($data['pan_view']){
+        	   $series->pan_view = $data['pan_view'];
+            }else $series->pan_view ="";
         	$series->save();
             
             $editview = SeriesPostViews::find($id);

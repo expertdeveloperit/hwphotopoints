@@ -16,3 +16,14 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('user/login','Api\UserAuthenticate@authenticate');
+
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('page/{id?}','Api\PagesController@index');
+    Route::post('year','Api\SeriesController@getYear');
+    Route::post('posts','Api\SeriesController@getLocations');
+    Route::post('imagetype','Api\SeriesController@imageType');
+});
+

@@ -10,9 +10,9 @@
         <small>manage your all pages here</small>
       </h1>
        <ol class="breadcrumb">
-            <li><a href="{{route('allSeries')}}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="{{route('specificSeries',session('seriesName'))}}">{{ucfirst(session('seriesName'))}} Series</a></li>
-            <li class="active"><a href="{{route('seriesView',$post['id'])}}">{{$post['title']}}</a></li>
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">{{ucfirst(session('seriesName'))}} Series</a></li>
+            
           </ol>
     </section>
 
