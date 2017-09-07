@@ -20,8 +20,9 @@ class Cors
             $origin = $request->server()['HTTP_ORIGIN'];
             
             if(in_array($origin, $domains)){
-                header('Access-Control-Allow-Origin: '. $origin);
-                header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+                header('Access-Control-Allow-Origin: '.$origin);
+                //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization,X-Auth-Token');
+                header('Access-Control-Allow-Headers: Content-Type, x-xsrf-token, x_csrftoken,token,Authorization');
             }
 
         }
