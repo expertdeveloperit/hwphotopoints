@@ -25,5 +25,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('year','Api\SeriesController@getYear');
     Route::post('posts','Api\SeriesController@getLocations');
     Route::post('imagetype','Api\SeriesController@imageType');
+    Route::post('values','Api\SeriesController@imageViews');
+    Route::get('pseries','Api\SeriesController@pSeriesList');
+    Route::post('pseriesdetail','Api\SeriesController@pSeriesPostsDetail');
+    Route::post('seriesdetail','Api\SeriesController@anotherSeriesPostsDetail'); 
 });
 
