@@ -130,5 +130,10 @@ class SeriesController extends Controller
         return response()->json(compact('media'));
     }    
 
+    //when all form data submited
 
+    public function uploadMedia(Request $request)
+    {
+        return "ok";
+    }
 }
