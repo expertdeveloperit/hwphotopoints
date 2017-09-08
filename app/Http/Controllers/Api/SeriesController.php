@@ -53,7 +53,14 @@ class SeriesController extends Controller
 
     	$postId = SeriesPosts::select('id')->where('title','=',$location)->where('year','=',$year)->first();
     	//return $postId;
-    	$getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+        if($postId){
+            if($postId->count() > 0){
+        	   $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+            }   
+        }else{
+            $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
+            $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+        }
         $imageTypes = array();
         foreach ($getType as $key => $value) {
             $imageTypes[] = $value['image_view'];
@@ -72,8 +79,15 @@ class SeriesController extends Controller
         $image_view = $data['image_view'];
 
         $postId = SeriesPosts::select('id')->where('title','=',$location)->where('year','=',$year)->first();
-        //return $postId;
-        $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+         if($postId){
+            if($postId->count() > 0){
+               $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+            }   
+        }else{
+            $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
+            $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+        }
+        
         $imageValues = array();
         foreach ($getValue as $key => $value) {
             if($image_view =="PAN"){
@@ -116,5 +130,10 @@ class SeriesController extends Controller
         return response()->json(compact('media'));
     }    
 
+    //when all form data submited
 
+    public function uploadMedia(Request $request)
+    {
+        return "ok";
+    }
 }
