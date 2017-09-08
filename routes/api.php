@@ -29,7 +29,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('pseries','Api\SeriesController@pSeriesList');
     Route::post('pseriesdetail','Api\SeriesController@pSeriesPostsDetail');
     Route::post('seriesdetail','Api\SeriesController@anotherSeriesPostsDetail'); 
-    Route::post('uploadmedia','Api\SeriesController@uploadMedia'); 
+    Route::post('uploaddata','Api\SeriesController@uploadData'); 
     
 });
 

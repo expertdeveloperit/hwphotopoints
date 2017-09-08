@@ -9,11 +9,13 @@ use App\Series;
 use App\SeriesPosts;
 use App\SeriesPostViews;
 use App\MediaInformation;
+use Image;
 use Session;
 use Validator;
 use Redirect;
 use Input;
 use Auth;
+use Storage;
 class SeriesController extends Controller
 {   
     // get minimum year value
@@ -132,8 +134,62 @@ class SeriesController extends Controller
 
     //when all form data submited
 
-    public function uploadMedia(Request $request)
+    public function uploadData(Request $request)
     {
-        return "ok";
+        $data = $request->all();
+
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $year = $data['year'];
+        $series = $data['series'];
+        $location = $data['location'];
+        $season = $data['season'];
+        $image_view = $data['image_view'];
+        $view = $data['view'];
+
+
+        $imageName = $year.'-'.$series.'-'.$location.'.'.$request->image->getClientOriginalExtension();
+        $image = $request->file('image');
+        $thumb = Image::make($image->getRealPath())->resize(225, 150, function ($constraint) {
+            $constraint->aspectRatio(); //maintain image ratio
+        });
+
+        $destinationPath = public_path('/uploads/');
+        $filePathSave = $destinationPath.'/thumb-'.$imageName;
+        $thumb->save($filePathSave);
+
+        $thumbName = $year.'/'.$series.'/'.'thumbs/'.$imageName;
+        Storage::disk('s3')->put($thumbName, file_get_contents($filePathSave),'public');
+
+        $originalImageName = $year.'/'.$series.'/'.$imageName;
+        Storage::disk('s3')->put($originalImageName, file_get_contents($image),'public');
+
+        $originalImageUrl = Storage::disk('s3')->url($originalImageName);
+        $thumbImageUrl = Storage::disk('s3')->url($thumbName);
+
+        if(file_exists($filePathSave)){
+            unlink($filePathSave);
+        }
+
+        //save the information
+        $user = Auth::user(); 
+        $mediaSave = new MediaInformation;
+        $mediaSave->user_id = $user->id;
+        $mediaSave->file_name = $imageName;
+        $mediaSave->file_location_aws = $originalImageUrl;
+        $mediaSave->file_thumb_location_aws = $thumbImageUrl;
+        $mediaSave->uploaded_by = $user->name;
+        $mediaSave->uploading_date = date('yyyy-mm-dd');
+        $mediaSave->year = $year;
+        $mediaSave->season = $season;
+        $mediaSave->series = $series;
+        $mediaSave->image_view = $image_view;
+        $mediaSave->views = $view;
+        $mediaSave->post_name = $location;
+        $mediaSave->save();
+        $response = 'succes';
+        return response()->json(compact('response','originalImageUrl','thumbImageUrl'));        
     }
 }
