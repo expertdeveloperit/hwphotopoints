@@ -30,6 +30,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('pseriesdetail','Api\SeriesController@pSeriesPostsDetail');
     Route::post('seriesdetail','Api\SeriesController@anotherSeriesPostsDetail'); 
     Route::post('uploaddata','Api\SeriesController@uploadData'); 
+    Route::get('imagedetail/{id}','Api\SeriesController@imageDetail'); 
+    Route::get('deletemedia/{id}','Api\SeriesController@imageDelete'); 
+    
     
 });
 

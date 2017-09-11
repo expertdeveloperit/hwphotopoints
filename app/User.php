@@ -31,6 +31,10 @@ class User extends Authenticatable
         return $this->hasOne('App\UserMeta','user_id');
     }
 
+     public function userMedia() {
+        return $this->hasMany('App\MediaInformation','user_id');
+    }
+
 
     //delete automatic related record from another table
     protected static function boot() {

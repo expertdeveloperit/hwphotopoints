@@ -188,8 +188,48 @@ class SeriesController extends Controller
         $mediaSave->image_view = $image_view;
         $mediaSave->views = $view;
         $mediaSave->post_name = $location;
-        $mediaSave->save();
-        $response = 'succes';
-        return response()->json(compact('response','originalImageUrl','thumbImageUrl'));        
+        if($mediaSave->save()){
+            $response = 'succes';
+            $imageId = $mediaSave->id;
+            $image_name = $mediaSave->file_name;
+            return response()->json(compact('response','originalImageUrl','thumbImageUrl','imageId','image_name'));        
+        }else{
+            $response = 'error';
+            return response()->json(compact('response','originalImageUrl','thumbImageUrl'));        
+        }
+    }
+
+    public function imageDetail(Request $request, $id = null)
+    {
+        $user = Auth::user();
+        $mediaInfo = $user->userMedia->where('id',$id)->first();   
+          
+         if($mediaInfo){
+            $status = "true";
+            return response()->json(compact('status','mediaInfo'));
+         }else {
+            $msg = "No data found";
+            $status = "false";
+            return response()->json(compact('status','msg'));
+         }
+        
+    }
+
+    public function imageDelete(Request $request, $id = null)
+    {
+       $user = Auth::user(); 
+        $mediaInfo = $user->userMedia->where('id',$id)->first();  
+        if($mediaInfo){
+            if($mediaInfo->delete()){
+                $msg = "Image has deleted.";
+                $status = "true";
+                return response()->json(compact('status','msg'));
+            }
+        }else{
+                $msg = "You have not permission to delete this record.";
+                $status = "false";
+                return response()->json(compact('status','msg'));
+        }
+
     }
 }
