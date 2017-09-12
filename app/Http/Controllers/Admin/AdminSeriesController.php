@@ -18,6 +18,29 @@ class AdminSeriesController extends Controller
     	return view('admin.series.series',['series'=>$series]);
     }
 
+    public function editParent(Request $request , $id = null)
+    {
+        if($id){
+            $editseries = Series::where("id",'=',$id)->first();
+            
+            return view('admin.series.parentseries.createupdate',['editseries'=>$editseries]);
+        }
+    }
+
+    public function updateParent(Request $request, $id = null)
+    {
+        $data = $request->all();
+        if($id){
+
+            $updateseries = Series::where("id",'=',$id)->first();
+            $updateseries->start_year = $data['year'];
+            $updateseries->save();
+            Session::flash('message', 'Series data has been updated!');
+            return redirect()->route('editMainSeries',$id);
+        }
+    }
+
+
     //Specific Series List like P series, L series
     public function series(Request $request, $seriesName = null){
         if($seriesName){

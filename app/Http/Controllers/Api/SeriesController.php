@@ -23,9 +23,9 @@ class SeriesController extends Controller
     {
     	$data = $request->all();
     	$seriesName = $data['series'];
-    	$seriesData = Series::where('name','=',$seriesName)->first();
-    	$years = SeriesPosts::select('year')->where('series_id','=',$seriesData->id)->orderBy('year','Asc')->first();
-		
+    	$seriesData = Series::select('start_year')->where('name','=',$seriesName)->first();
+    	//$years = SeriesPosts::select('year')->where('series_id','=',$seriesData->id)->orderBy('year','Asc')->first();
+		 $years = $seriesData; 
 		return response()->json(compact('years'));
     }
 

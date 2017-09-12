@@ -15,7 +15,7 @@ class Cors
      */
     public function handle($request, Closure $next)
     {   
-        $domains =['http://localhost:4200'];
+        $domains =['http://localhost:4200','http://localhost:9999'];
         if(isset($request->server()['HTTP_ORIGIN'])){
             $origin = $request->server()['HTTP_ORIGIN'];
             

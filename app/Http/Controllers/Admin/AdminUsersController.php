@@ -18,6 +18,13 @@ class AdminUsersController extends Controller
     public function index(){
     	$users = User::all();
 
+// echo "<pre>";
+// foreach ($users as $key => $value) {
+// 	echo $value->userMeta;
+// }
+// //print_r($users);
+
+//  exit;
     	return view('admin.users.index',['users'=>$users]);
     }
 

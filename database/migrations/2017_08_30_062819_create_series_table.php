@@ -16,7 +16,7 @@ class CreateSeriesTable extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->longText('description');
+            $table->string('start_year');
             $table->timestamps();
         });
     }

@@ -28,8 +28,8 @@
                 <tr>
                   <th>Id</th>
                   <th>Title</th>
-                  <th>Description</th>
-                 
+                  <th>Start Year</th>
+                 <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -38,8 +38,8 @@
                 <tr>
                   <td>{{$key + 1}}</td>
                   <td>{{$series['name']}}</td>
-                  <td>{{substr(strip_tags($series['description']), 0, 50)}}..</td>    
-                                  
+                  <td>{{$series['start_year']}}</td>    
+                  <th> <a class="btn bg-green btn-flat margin" href="{{route('editMainSeries',$series['id'])}}">Update</a></th>                
                 </tr>
                 @endforeach
                 </tbody>

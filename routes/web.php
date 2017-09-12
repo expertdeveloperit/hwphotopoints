@@ -29,6 +29,11 @@ Route::get('/admin/page/delete/{id?}','Admin\PagesController@delete')->name('del
 
 //Series
 Route::get('/admin/series','Admin\AdminSeriesController@index')->name('allSeries');
+Route::get('/admin/parentseries/{id}','Admin\AdminSeriesController@editParent')->name('editMainSeries');
+Route::post('/admin/parentseriesupdate/{id}','Admin\AdminSeriesController@updateParent')->name('updateMainSeries');
+
+
+//Sub Series
 Route::get('/admin/series/{seriesname?}','Admin\AdminSeriesController@series')->name('specificSeries');
 Route::get('/admin/series/edit/{id?}','Admin\AdminSeriesController@edit')->name('editSeries');
 Route::post('/admin/series/update/{id?}','Admin\AdminSeriesController@update')->name('updateSeries');
