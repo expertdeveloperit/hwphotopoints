@@ -113,14 +113,132 @@ class SeriesController extends Controller
     }
 
     //p series Posts  Detail
-    public function pSeriesPostsDetail(Request $request){
+    public function pSeriesPostsDetailFirstView(Request $request){
         $data = $request->all();
         $postName = $data['postname'];                    
         $userId = Auth::user()->id;    
-        $media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->get();
+        $years = $media = MediaInformation::select('year')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
+        //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
+        //get winter data
+        $wviews = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->groupBy('views')->get();
+        $winterData = array();
+        foreach ($wviews as $key => $value) {
+               $wdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->where('views',$value->views)->orderBy('year')->get();     
+               $winterData[$key]['view'] =  $value->views;
+               $winterData[$key]['data'] = $wdata;
+        }
+        //summer data
+        $sviews = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->get();
+        $summerData = array();
+        foreach ($sviews as $key => $value) {
+               $sdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->where('views',$value->views)->orderBy('year')->get();     
+               $summerData[$key]['view'] =  $value->views;
+               $summerData[$key]['data'] = $sdata;
+        }
+
+        //spring data
+        $sprviews = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->groupBy('views')->get();
+        $springData = array();
+        foreach ($sprviews as $key => $value) {
+               $sprdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->where('views',$value->views)->orderBy('year')->get();     
+               $springData[$key]['data'] = $sprdata;
+               $springData[$key]['view'] =  $value->views;
+        }
+
+        //autumn data
+        $aviews = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->groupBy('views')->get();
+        $autumnData = array();
+        foreach ($aviews as $key => $value) {
+               $adata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->where('views',$value->views)->orderBy('year')->get();     
+               $autumnData[$key]['data'] = $adata;
+               $autumnData[$key]['view'] =  $value->views;
+        }
         
-        return response()->json(compact('media'));
+        return response()->json(compact('winterData','summerData','springData','autumnData','years'));
     }
+
+
+    //P series Second View
+    
+    public function pSeriesPostsDetailSecondView(Request $request){
+        $data = $request->all();
+        $postName = $data['postname'];                    
+        $userId = Auth::user()->id;    
+        $years = $media = MediaInformation::select('year')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
+        //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
+        //get winter data
+        $allViews = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->get();
+        $ViewsData = array();
+        $information = array();
+        foreach ($allViews as $key => $value) {
+               $ViewsData[$key]['view'] =  $value->views;
+               
+               $sudata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','sum')->orderBy('year')->get();     
+               if($sudata->count() > 0){
+                   $sutotalData['season'] = "SUMMER";
+                   $ViewsData[$key]['data'][] = $sutotalData;
+                   $sutotalData['info'] = $sudata;
+                   $information[] = $sutotalData;
+               } 
+               $widata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','win')->orderBy('year')->get();     
+               if($widata->count() > 0){
+                   $wtotalData['season'] = "WINTER";
+                   $ViewsData[$key]['data'][] = $wtotalData;
+                   $wtotalData['info'] = $widata;
+                   $information[] = $wtotalData;
+               } 
+
+               $spdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','spr')->orderBy('year')->get();     
+               if($spdata->count() > 0){
+                    $stotalData['season'] = "SPRING";
+                    $ViewsData[$key]['data'][] = $stotalData;
+                    $stotalData['info'] = $spdata;
+                    $information[] = $stotalData;
+               }
+
+
+               $audata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','aut')->orderBy('year')->get();     
+               if($audata->count() > 0){
+                    $atotalData['season'] = "AUTUMN";
+                    $ViewsData[$key]['data'][] = $atotalData;
+                    $atotalData['info'] = $audata;
+                     $information[] = $atotalData;
+                } 
+
+        }
+          
+       
+        
+        return response()->json(compact('ViewsData','years','information'));
+    }
+
+    //P series Third View
+    public function pSeriesPostsDetailThirdView(Request $request){
+        $data = $request->all();
+        $postName = $data['postname'];                    
+        $userId = Auth::user()->id;    
+        $years  = MediaInformation::select('year')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
+        
+        $ViewsData = array();
+        $information = array();
+        foreach ($years as $key => $value) {
+               $currentYear = $value->year;
+               $ViewsData[$key]['year'] = $currentYear ;
+               
+               $views = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('year',$currentYear)->groupBy('views')->get();     
+               foreach ($views as $viewkey => $viewvalue) {
+                 $ViewsData[$key]['viewdata'][$viewkey]['name'] = $viewvalue->views;
+                  $seasonInfo =   MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('year',$currentYear)->where('views',$viewvalue->views)->get();                        
+                  $ViewsData[$key]['viewdata'][$viewkey]['data'] =  $seasonInfo;
+               }
+        }
+        
+       
+        
+        return response()->json(compact('ViewsData','years'));
+    }
+
+
 
     //another series detail
     public function anotherSeriesPostsDetail(Request $request){
