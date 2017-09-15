@@ -21,7 +21,6 @@ class CreateUserMetaTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('biography');
-            $table->string('gender');
             $table->string('country');
             $table->string('profile_img');
             $table->string('status');

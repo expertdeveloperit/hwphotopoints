@@ -6,14 +6,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        All Pages
-        <small>manage your all pages here</small>
+        All Users
+        <small>manage your users here.</small>
       </h1>
        <ol class="breadcrumb">
             <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">{{ucfirst(session('seriesName'))}} Series</a></li>
-            
-          </ol>
+            <li><a href="#">Users</a></li>
+       </ol>
     </section>
 
     <!-- Main content -->
@@ -45,7 +44,7 @@
                   <td>{{$user->email}}</td>    
                   <td>@if(isset($user->userMeta)) @if($user->userMeta->role == "1") {{'Super Admin'}} @elseif($user->userMeta->role == "2") {{'Photographer'}} @elseif($user->userMeta->role == "3") {{'Subscriber'}} @endif @endif</td>                  
                    <td>
-                    <a class="btn bg-green btn-flat margin" href="{{route('usersEdit',$user['id'])}}">Update</a>
+                    <a class="btn bg-green btn-flat margin" href="{{route('usersEdit',$user['id'])}}">Edit</a>
                     <a class="btn bg-red btn-flat margin" href="{{route('usersDelete',$user['id'])}}">Delete</a>
                   </td>
                 </tr>

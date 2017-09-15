@@ -18,13 +18,6 @@ class AdminUsersController extends Controller
     public function index(){
     	$users = User::all();
 
-// echo "<pre>";
-// foreach ($users as $key => $value) {
-// 	echo $value->userMeta;
-// }
-// //print_r($users);
-
-//  exit;
     	return view('admin.users.index',['users'=>$users]);
     }
 
@@ -55,7 +48,6 @@ class AdminUsersController extends Controller
 			$user->save();
 
 			$userMeta = UserMeta::where('user_id' , '=', $id);
-			$userMeta->gender = $data['gender'];
 			$userMeta->role = $data['role'];
 			$userMeta->status = $data['status'];
 			Session::flash('message', ' User has been updated!');
@@ -71,7 +63,6 @@ class AdminUsersController extends Controller
 			$user->save();
 
 			$userMeta = new UserMeta;
-			$userMeta->gender = $data['gender'];
 			$userMeta->role = $data['role'];
 			$userMeta->status = $data['status'];
 			$userMeta->first_name = '';

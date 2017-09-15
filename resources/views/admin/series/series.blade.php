@@ -39,7 +39,7 @@
                   <td>{{$key + 1}}</td>
                   <td>{{$series['name']}}</td>
                   <td>{{$series['start_year']}}</td>    
-                  <th> <a class="btn bg-green btn-flat margin" href="{{route('editMainSeries',$series['id'])}}">Update</a></th>                
+                  <th> <a class="btn bg-green btn-flat margin" href="{{route('editMainSeries',$series['id'])}}">Edit</a></th>                
                 </tr>
                 @endforeach
                 </tbody>

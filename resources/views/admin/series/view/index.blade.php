@@ -50,7 +50,7 @@
                   <td>{{$view['value']}}</td>
                   <td>{{$view['pan_view']}}</td>
                   <td>
-                    <a class="btn bg-green btn-flat margin" href="{{route('seriesViewEdit')}}/{{$post['id']}}/{{$view['id']}}">Update</a>
+                    <a class="btn bg-green btn-flat margin" href="{{route('seriesViewEdit')}}/{{$post['id']}}/{{$view['id']}}">Edit</a>
                     <a class="btn bg-red btn-flat margin" href="{{route('seriesViewDelete')}}/{{$post['id']}}/{{$view['id']}}">Delete</a>
                   </td> 
                 </tr>

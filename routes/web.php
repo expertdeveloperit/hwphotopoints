@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 //admin Panel
 //pages
 Route::group(['middleware' => ['superadmin']], function () {
+Route::get('/admin','Admin\PagesController@index');
 Route::get('/admin/pages','Admin\PagesController@index')->name('allPages');
 Route::get('/admin/page/editupdate/{id?}','Admin\PagesController@createOrEdit')->name('createOrEdit');
 Route::post('/admin/page/addnew/{id?}','Admin\PagesController@addNeworUpdate')->name('addNeworUpdate');

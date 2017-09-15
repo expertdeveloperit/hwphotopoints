@@ -3,7 +3,13 @@
 @section('content')
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-  
+    <section class="content-header">
+      
+       <ol class="breadcrumb">
+            <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{{route('usersList')}}">Users</a></li>
+       </ol>
+    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -11,8 +17,7 @@
       
         <section class="content-header">
           <h1>
-            Update Series
-            
+            Update User            
           </h1>
         </section>
         <div class="box">
@@ -40,13 +45,7 @@
                         <label>Email</label>
                         <input type="text" name="email" value="{{$user['email']}}" class="form-control" id="title" placeholder="Email">
                       </div>
-                      <div class="form-group">
-                        <label>Gender</label>
-                        <select name="gender"  class="form-control">
-                          <option @if($user->userMeta->gender == 'male') {{'selected'}} @endif value="male">Male</option>
-                          <option @if($user->userMeta->gender == 'female') {{'selected'}} @endif value="female">Female</option>
-                        </select>
-                      </div>
+                      
                       <div class="form-group">
                         <label>Role</label>
                         <select name="role"  class="form-control">
@@ -109,13 +108,7 @@
                         <label>Email</label>
                         <input type="text" name="email" value="" class="form-control" id="title" placeholder="Email">
                       </div>
-                      <div class="form-group">
-                        <label>Gender</label>
-                        <select name="gender" value="" class="form-control">
-                          <option  value="male">Male</option>
-                          <option  value="female">Female</option>
-                        </select>                        
-                      </div>
+                     
                        <div class="form-group">
                         <label>Role</label>
                         <select name="role" value="" class="form-control">
