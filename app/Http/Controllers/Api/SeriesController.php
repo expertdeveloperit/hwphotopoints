@@ -61,7 +61,12 @@ class SeriesController extends Controller
             }   
         }else{
             $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
-            $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+            if($postId){
+                $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+            }else{
+                $postId = SeriesPosts::select('id')->where('year','>',$year)->first();
+                $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
+            }
         }
         $imageTypes = array();
         foreach ($getType as $key => $value) {
@@ -87,7 +92,13 @@ class SeriesController extends Controller
             }   
         }else{
             $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
-            $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+            if($postId){
+                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+            }else{
+                $postId = SeriesPosts::select('id')->where('year','>',$year)->first();
+                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
+            }
+            
         }
         
         $imageValues = array();
@@ -105,9 +116,10 @@ class SeriesController extends Controller
 
     public function pSeriesList(Request $request)
     {
-            
+        $userId = Auth::user()->id;
         $seriesData = Series::where('name','=','P')->first();
-        $posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
+        //$posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
+        $posts = MediaInformation::select('post_name')->where('user_id','=',$userId)->where('series','=','p')->groupBy('post_name')->orderBy('post_name')->get();
         
         return response()->json(compact('posts'));
     }
@@ -245,9 +257,19 @@ class SeriesController extends Controller
         $data = $request->all();
         $seriesName = $data['seriesname'];                    
         $userId = Auth::user()->id;    
-        $media = MediaInformation::where('user_id','=',$userId)->where('series','=',$seriesName)->get();
+        //$media = MediaInformation::where('user_id','=',$userId)->where('series','=',$seriesName)->get();
         
-        return response()->json(compact('media'));
+        $years = MediaInformation::select('year')->where('user_id','=',$userId)->where('series','=',$seriesName)->groupBy('year')->orderBy('year')->get();
+        //get winter data
+        $posts_name = MediaInformation::select('post_name')->where('user_id','=',$userId)->where('series','=',$seriesName)->groupBy('post_name')->get();
+        $seriesData = array();
+        foreach ($posts_name as $key => $value) {
+               $wdata = MediaInformation::select('id','file_location_aws','file_thumb_location_aws','post_name','year','series')->where('user_id','=',$userId)->where('series','=',$seriesName)->where('post_name','=',$value->post_name)->orderBy('year')->get();     
+               $seriesData[$key]['view'] =  $value->post_name;
+               $seriesData[$key]['data'] = $wdata;
+        }
+
+        return response()->json(compact('seriesData','years'));
     }    
 
     //when all form data submited
@@ -260,12 +282,18 @@ class SeriesController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $year = $data['year'];
         $series = $data['series'];
+        $year = $data['year'];
         $location = $data['location'];
-        $season = $data['season'];
-        $image_view = $data['image_view'];
-        $view = $data['view'];
+        if($series != "P" && $series != "p"){
+           $season = "";
+           $image_view = "";
+           $view = "";
+        }else{
+           $season = $data['season'];
+           $image_view = $data['image_view'];
+           $view = $data['view'];
+        }
 
 
         $imageName = $year.'-'.$series.'-'.$location.'.'.$request->image->getClientOriginalExtension();
@@ -293,19 +321,33 @@ class SeriesController extends Controller
 
         //save the information
         $user = Auth::user(); 
-        $mediaSave = new MediaInformation;
-        $mediaSave->user_id = $user->id;
-        $mediaSave->file_name = $imageName;
-        $mediaSave->file_location_aws = $originalImageUrl;
-        $mediaSave->file_thumb_location_aws = $thumbImageUrl;
-        $mediaSave->uploaded_by = $user->name;
-        $mediaSave->uploading_date = date('yyyy-mm-dd');
-        $mediaSave->year = $year;
-        $mediaSave->season = $season;
-        $mediaSave->series = $series;
-        $mediaSave->image_view = $image_view;
-        $mediaSave->views = $view;
-        $mediaSave->post_name = $location;
+        if($series == "P" && $series == "p"){
+            //$mediaSave = new MediaInformation;
+            MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
+            $mediaSave->user_id = $user->id;
+            $mediaSave->file_name = $imageName;
+            $mediaSave->file_location_aws = $originalImageUrl;
+            $mediaSave->file_thumb_location_aws = $thumbImageUrl;
+            $mediaSave->uploaded_by = $user->name;
+            $mediaSave->uploading_date = date('y-m-d');
+            $mediaSave->year = $year;
+            $mediaSave->season = $season;
+            $mediaSave->series = $series;
+            $mediaSave->image_view = $image_view;
+            $mediaSave->views = $view;
+            $mediaSave->post_name = $location;
+        }else{
+            $mediaSave = MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location]);
+            $mediaSave->user_id = $user->id;
+            $mediaSave->file_name = $imageName;
+            $mediaSave->file_location_aws = $originalImageUrl;
+            $mediaSave->file_thumb_location_aws = $thumbImageUrl;
+            $mediaSave->uploaded_by = $user->name;
+            $mediaSave->uploading_date = date('y-m-d');
+            $mediaSave->season = $season;
+            $mediaSave->image_view = $image_view;
+            $mediaSave->views = $view;
+        }
         if($mediaSave->save()){
             $response = 'succes';
             $imageId = $mediaSave->id;
