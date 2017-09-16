@@ -233,20 +233,21 @@ class SeriesController extends Controller
         
         $ViewsData = array();
         $information = array();
-        foreach ($years as $key => $value) {
-               $currentYear = $value->year;
-               $ViewsData[$key]['year'] = $currentYear ;
                
-               $views = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('year',$currentYear)->groupBy('views')->get();     
-               foreach ($views as $viewkey => $viewvalue) {
-                 $ViewsData[$key]['viewdata'][$viewkey]['name'] = $viewvalue->views;
-                  $seasonInfo =   MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('year',$currentYear)->where('views',$viewvalue->views)->get();                        
-                  $ViewsData[$key]['viewdata'][$viewkey]['data'] =  $seasonInfo;
-               }
+        $views = MediaInformation::select('views')->where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->get();     
+        foreach ($views as $viewkey => $viewvalue) {
+            $ViewsData[$viewkey]['name'] = $viewvalue->views;
+            $index = 0;
+            foreach ($years as $key => $year) {
+               $seasonInfo =   MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('year',$year->year)->where('views',$viewvalue->views)->get();
+                if($seasonInfo->count() > 0){
+                    $ViewsData[$viewkey]['data'][$index]['data'] =  $seasonInfo;
+                    $ViewsData[$viewkey]['data'][$index]['year'] = $year->year;
+                    $index++;
+                }
+            }
         }
-        
-       
-        
+
         return response()->json(compact('ViewsData','years'));
     }
 

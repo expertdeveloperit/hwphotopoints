@@ -23,17 +23,18 @@ class UserAuthenticate extends Controller
             // attempt to verify the credentials and create a token for the user
 
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return response()->json(['error' => 'Invalid login detail.','status'=>false]);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json(['error' => 'could_not_create_token','status'=>false]);
         }
 
         $user = Auth::user();
 
         if($user->userMeta->role == "1" || $user->userMeta->role == "2"){
-            return response()->json(compact('token','user'));    
+            $status = true;
+            return response()->json(compact('token','user','status'));    
         }else{
             JWTAuth::setToken($token)->invalidate();
             return response()->json(['error' => 'invalid_credentials'], 401);
