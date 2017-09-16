@@ -37,7 +37,7 @@ class UserAuthenticate extends Controller
             return response()->json(compact('token','user','status'));    
         }else{
             JWTAuth::setToken($token)->invalidate();
-            return response()->json(['error' => 'invalid_credentials'], 401);
+            return response()->json(['error' => "Your can't access this area.",'status'=>false]);
         }	
         // all good so return the token
         
