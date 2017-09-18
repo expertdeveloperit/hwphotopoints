@@ -42,4 +42,11 @@ class UserAuthenticate extends Controller
         // all good so return the token
         
     }
+
+
+    public function forgetPassword(Request $request)
+    {
+        $data = $request->all();
+        
+    }
 }
