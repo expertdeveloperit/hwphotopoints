@@ -50,6 +50,7 @@ class AdminUsersController extends Controller
 			$userMeta = UserMeta::where('user_id' , '=', $id);
 			$userMeta->role = $data['role'];
 			$userMeta->status = $data['status'];
+			$userMeta->save();
 			Session::flash('message', ' User has been updated!');
 	    	return redirect()->route('usersEdit',$id);
     	}else{

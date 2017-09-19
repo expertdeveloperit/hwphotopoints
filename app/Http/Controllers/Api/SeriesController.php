@@ -60,13 +60,7 @@ class SeriesController extends Controller
         	   $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
             }   
         }else{
-            $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
-            if($postId){
-                $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
-            }else{
-                $postId = SeriesPosts::select('id')->where('year','>',$year)->first();
-                $getType = SeriesPostViews::where('series_list_id','=',$postId->id)->get();
-            }
+            $getType = SeriesPostViews::select('image_view')->groupBy('image_view')->get();            
         }
         $imageTypes = array();
         foreach ($getType as $key => $value) {
@@ -91,23 +85,24 @@ class SeriesController extends Controller
                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
             }   
         }else{
-            $postId = SeriesPosts::select('id')->where('year','<',$year)->first();    
-            if($postId){
-                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
-            }else{
-                $postId = SeriesPosts::select('id')->where('year','>',$year)->first();
-                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
-            }
+
+            $getValue = SeriesPostViews::where('image_view','=',$image_view)->get();
             
         }
         
         $imageValues = array();
+        $index = 0;
+        $index2 = 0;
         foreach ($getValue as $key => $value) {
             if($image_view =="PAN"){
-                $imageValues[] = $value['value']." ".$value['pan_view'];
-            }else $imageValues[] = $value['value'];
+                $imageValues[$index] = $value['value']." ".$value['pan_view'];
+                $index++;
+            }else { 
+                $imageValues[$index2] = $value['value'];
+                $index2++;
+            }
         }
-        $values = array_unique($imageValues);
+        $values = array_values(array_unique($imageValues));
         return response()->json(compact('values'));          
     }
 
@@ -359,6 +354,106 @@ class SeriesController extends Controller
             return response()->json(compact('response','originalImageUrl','thumbImageUrl'));        
         }
     }
+
+
+    //update media info
+
+
+    public function updateMediaData(Request $request)
+    {
+
+        $data = $request->all();
+
+        if($request->file('image')){
+            $this->validate($request, [
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+        }
+
+        $series = $data['series'];
+        $year = $data['year'];
+        $location = $data['location'];
+        $media_ID = $data['media_id'];
+        if($series != "P" && $series != "p"){
+           $season = "";
+           $image_view = "";
+           $view = "";
+        }else{
+           $season = $data['season'];
+           $image_view = $data['image_view'];
+           $view = $data['view'];
+        }
+
+
+        if($request->file('image')){
+            $imageName = $year.'-'.$series.'-'.$location.'.'.$request->image->getClientOriginalExtension();
+            $image = $request->file('image');
+            $thumb = Image::make($image->getRealPath())->resize(225, 150, function ($constraint) {
+                $constraint->aspectRatio(); //maintain image ratio
+            });
+
+            $destinationPath = public_path('/uploads/');
+            $filePathSave = $destinationPath.'/thumb-'.$imageName;
+            $thumb->save($filePathSave);
+
+            $thumbName = $year.'/'.$series.'/'.'thumbs/'.$imageName;
+            Storage::disk('s3')->put($thumbName, file_get_contents($filePathSave),'public');
+
+            $originalImageName = $year.'/'.$series.'/'.$imageName;
+            Storage::disk('s3')->put($originalImageName, file_get_contents($image),'public');
+
+            $originalImageUrl = Storage::disk('s3')->url($originalImageName);
+            $thumbImageUrl = Storage::disk('s3')->url($thumbName);
+
+            if(file_exists($filePathSave)){
+                unlink($filePathSave);
+            }
+        }
+        //save the information
+        $user = Auth::user(); 
+        if($series == "P" && $series == "p"){
+            $mediaSave = MediaInformation::find($media_ID);
+            if($request->file('image')){
+                $mediaSave->file_name = $imageName;
+                $mediaSave->file_location_aws = $originalImageUrl;
+                $mediaSave->file_thumb_location_aws = $thumbImageUrl;
+            }
+            $mediaSave->uploaded_by = $user->name;
+            $mediaSave->uploading_date = date('y-m-d');
+            $mediaSave->year = $year;
+            $mediaSave->season = $season;
+            $mediaSave->series = $series;
+            $mediaSave->image_view = $image_view;
+            $mediaSave->views = $view;
+            $mediaSave->post_name = $location;
+        }else{
+            $mediaSave = MediaInformation::find($media_ID);
+            $mediaSave->user_id = $user->id;
+            if($request->file('image')){
+                $mediaSave->file_name = $imageName;
+                $mediaSave->file_location_aws = $originalImageUrl;
+                $mediaSave->file_thumb_location_aws = $thumbImageUrl;
+            }
+            $mediaSave->uploaded_by = $user->name;
+            $mediaSave->uploading_date = date('y-m-d');
+            $mediaSave->season = $season;
+            $mediaSave->image_view = $image_view;
+            $mediaSave->views = $view;
+        }
+        if($mediaSave->save()){
+            $response = 'succes';
+            $imageId = $mediaSave->id;
+            $originalImageUrl = $mediaSave->file_location_aws;
+            $thumbImageUrl = $mediaSave->file_thumb_location_aws;
+            $image_name = $mediaSave->file_name;
+            return response()->json(compact('response','originalImageUrl','thumbImageUrl','imageId','image_name'));        
+        }else{
+            $response = 'error';
+            return response()->json(compact('response','originalImageUrl','thumbImageUrl'));        
+        }
+    }
+
+
 
     public function imageDetail(Request $request, $id = null)
     {

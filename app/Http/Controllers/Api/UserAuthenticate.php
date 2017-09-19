@@ -12,6 +12,10 @@ use Validator;
 use Redirect;
 use Input;
 use Auth;
+use App\User;
+use App\UserMeta;
+use Hash;
+
 class UserAuthenticate extends Controller
 {
     public function authenticate(Request $request)
@@ -47,6 +51,64 @@ class UserAuthenticate extends Controller
     public function forgetPassword(Request $request)
     {
         $data = $request->all();
-        
+        $user = User::where('email',$data['email'])->first();
+        if($user){
+            $key = time().substr(base64_encode(crypt('', '')), 0, 32);
+            $meta = UserMeta::where('user_id',$user->id)->first();
+            $meta->forget_pass = $key;
+            $meta->save();
+
+            $to = $user->email;
+            $subject = "HW Photo Points Reset Password";
+            $link = "http://photos.hwphotopoints.org.uk/reset/password/".$key;
+            $txt = "To reset your password please click on this <a href=".$link.">link</a> and follow the instructions.";
+            $headers = "From: webmaster@example.com" . "\r\n" .
+            "CC: somebodyelse@example.com";
+
+            mail($to,$subject,$txt,$headers);
+            $msg = "We have sent you an email, please use link to reset password.";
+            $status = "true";
+            return response()->json(compact('msg','status','link'));            
+        }else{
+            $msg = "This Email does't exist.";
+            $status = "false";
+            return response()->json(compact('msg','status'));            
+        }
+    }
+
+    public function validateResetKey(Request $request , $key = null)
+    {
+        if($key){
+            $meta = UserMeta::where('forget_pass',$key)->first();
+            if($meta){
+                $msg = "";
+                $status = "true";
+                return response()->json(compact('msg','status'));                   
+            }else{
+                $msg = "This url has expired.";
+                $status = "false";
+                return response()->json(compact('msg','status'));                   
+            }
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $data = $request->all();
+          $meta = UserMeta::where('forget_pass',$data['key'])->first();
+            if($meta){
+                $user = User::find($meta->user_id)->first();
+                $user->password = Hash::make($data['password']);
+                $user->save();
+                $meta->forget_pass = "";
+                $meta->save();
+                $msg = "Password has reset.";
+                $status = "true";
+                return response()->json(compact('msg','status'));                   
+            }else{
+                $msg = "The reset url has expired.";
+                $status = "false";
+                return response()->json(compact('msg','status'));                   
+            }
     }
 }

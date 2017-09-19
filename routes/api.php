@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('user/login','Api\UserAuthenticate@authenticate');
 Route::post('forgetpassword','Api\UserAuthenticate@forgetPassword');
+Route::get('resetpassword/key/{key}','Api\UserAuthenticate@validateResetKey');
+Route::post('reset/password','Api\UserAuthenticate@resetPassword');
+
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('page/{id?}','Api\PagesController@index');
@@ -33,6 +36,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('pseriesdetail/thirdview','Api\SeriesController@pSeriesPostsDetailThirdView');
     Route::post('seriesdetail','Api\SeriesController@anotherSeriesPostsDetail'); 
     Route::post('uploaddata','Api\SeriesController@uploadData'); 
+    Route::post('updatemediadata','Api\SeriesController@updateMediaData'); 
     Route::get('imagedetail/{id}','Api\SeriesController@imageDetail'); 
     Route::get('deletemedia/{id}','Api\SeriesController@imageDelete'); 
     

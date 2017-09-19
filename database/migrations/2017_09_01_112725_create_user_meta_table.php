@@ -20,8 +20,7 @@ class CreateUserMetaTable extends Migration
             $table->string('role');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('biography');
-            $table->string('country');
+            $table->string('forget_pass');
             $table->string('profile_img');
             $table->string('status');
             $table->timestamps();
