@@ -16,6 +16,7 @@ use Redirect;
 use Input;
 use Auth;
 use Storage;
+use File;
 class SeriesController extends Controller
 {   
     // get minimum year value
@@ -462,17 +463,23 @@ class SeriesController extends Controller
           
          if($mediaInfo){
             $status = "true";
-          //   echo $url = "http://localhost:8000/public/uploads/2014-SUM-P-P011A-SNG-S150.JPG";
-          //   $exif = exif_read_data($url, 0, true);
-          // foreach ($exif as $key => $section) {
-          //       foreach ($section as $name => $val) {
-          //           if($name=='MakerNote')
-          //               continue;
-          //           echo "$key.$name: $val<br />\n";
-          //       }
-          //   }
-          //   exit;
-            return response()->json(compact('status','mediaInfo'));
+            $url = $mediaInfo->file_location_aws;
+            $exifData = array();    
+            //$exif = exif_read_data($url, 'IFD0');
+            // if($exif===false) { 
+            //     $exifmsg = "No exif data found."; $exifstatus="false"; 
+            // }else{
+            //     $exifstatus="true";
+            //     // $exif = exif_read_data($url, 0, true);
+            //     // foreach ($exif as $key => $section) {
+            //     //     foreach ($section as $name => $val) {
+            //     //         //$exifData[] = $key.$name.$val;
+            //     //         echo $key."@@".$name."@@".$val;
+            //     //     }
+            //     // }
+            // }    
+            
+            return response()->json(compact('status','mediaInfo','exifData'));
          }else {
             $msg = "No data found";
             $status = "false";
@@ -498,4 +505,40 @@ class SeriesController extends Controller
         }
 
     }
+
+
+    //upload batch data
+    public function uploadBatchData(Request $request)
+    {
+        $data = $request->all();
+        $numbersOfFile =  count($request->file('fileIndex'));
+
+        $csvCount = count($request->file('csv'));
+
+        $allFiles = $request->file('fileIndex');    
+        if($numbersOfFile > 0 && $csvCount > 0){
+            $destinationPath = public_path('/uploads/').time();
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            //upload multiple images
+            foreach ($allFiles as $file) {
+                $name =  $file->getClientOriginalName();
+                $file = $file->move($destinationPath, $name);
+            }
+            //upload CSV
+            $csv = $request->file('csv');
+            $csvName = $csv->getClientOriginalName();
+            $csvFile = $csv->move($destinationPath, $csvName);    
+            
+            $msg = "Images and CSV file has uploaded.";
+            $status = "true";
+            return response()->json(compact('status','msg'));    
+        }else{
+            $msg = "Please upload both csv and image.";
+            $status = "false";
+            return response()->json(compact('status','msg'));
+        }       
+
+    }
+
+
 }
