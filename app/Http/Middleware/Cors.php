@@ -23,8 +23,6 @@ class Cors
                 header('Access-Control-Allow-Origin: '.$origin);
                 //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization,X-Auth-Token');
                 header('Access-Control-Allow-Headers: Content-Type, x-xsrf-token, x_csrftoken,token,Authorization');
-            }else{
-                return response()->json(["You can't access it"], 404); 
             }
 
         }
