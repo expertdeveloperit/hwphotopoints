@@ -15,7 +15,7 @@ class Cors
      */
     public function handle($request, Closure $next)
     {   
-        $domains =['http://localhost:4200','http://localhost:9999','http://182.75.232.100:8126','http://backend.hwphotopoints.org.uk'];
+        $domains =['http://localhost:4200','http://localhost:9999','http://182.75.232.100:8126','http://photos2.hwphotopoints.org.uk'];
         if(isset($request->server()['HTTP_ORIGIN'])){
             $origin = $request->server()['HTTP_ORIGIN'];
             
