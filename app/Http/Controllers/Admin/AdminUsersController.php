@@ -68,8 +68,7 @@ class AdminUsersController extends Controller
 			$userMeta->status = $data['status'];
 			$userMeta->first_name = '';
 			$userMeta->last_name = '';
-			$userMeta->country = '';
-			$userMeta->biography = '';
+			$userMeta->forget_pass = '';
 			$userMeta->profile_img = '';
 			$user->userMeta()->save($userMeta);
 			Session::flash('message', ' User has been saved!');

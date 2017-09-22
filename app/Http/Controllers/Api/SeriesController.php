@@ -9,6 +9,7 @@ use App\Series;
 use App\SeriesPosts;
 use App\SeriesPostViews;
 use App\MediaInformation;
+use App\CronJob;
 use Image;
 use Session;
 use Validator;
@@ -37,14 +38,18 @@ class SeriesController extends Controller
     	$year = $data['year'];
     	$series = $data['series'];
 
-    	$posts = SeriesPosts::select('title')->where('year','=',$year)->get();
-    	if($posts->count() > 0){
-			return response()->json(compact('posts'));	
-		}else{
-			$seriesData = Series::where('name','=',$series)->first();
-			$posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
-			return response()->json(compact('posts'));	
-		}
+        $seriesData = Series::where('name','=',$series)->first();
+        $posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
+        return response()->json(compact('posts'));  
+
+  //   	$posts = SeriesPosts::select('title')->where('year','=',$year)->get();
+  //   	if($posts->count() > 0){
+		// 	return response()->json(compact('posts'));	
+		// }else{
+		// 	$seriesData = Series::where('name','=',$series)->first();
+		// 	$posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
+		// 	return response()->json(compact('posts'));	
+		// }
     }
 
     //get image type
@@ -96,7 +101,8 @@ class SeriesController extends Controller
         $index2 = 0;
         foreach ($getValue as $key => $value) {
             if($image_view =="PAN"){
-                $imageValues[$index] = $value['value']." ".$value['pan_view'];
+                //$imageValues[$index] = $value['value']." ".$value['pan_view'];
+                $imageValues[$index] = $value['value'];
                 $index++;
             }else { 
                 $imageValues[$index2] = $value['value'];
@@ -276,20 +282,28 @@ class SeriesController extends Controller
         $data = $request->all();
 
         $this->validate($request, [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         $series = $data['series'];
         $year = $data['year'];
         $location = $data['location'];
+        $ext = $request->image->getClientOriginalExtension();
+
         if($series != "P" && $series != "p"){
            $season = "";
            $image_view = "";
            $view = "";
+           $imageName = $year.'-'.$series.'-'.$location.'.'.$ext;
+           $originalImageName = $year.'/'.$series.'/'.$imageName;
+           $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
         }else{
            $season = $data['season'];
            $image_view = $data['image_view'];
            $view = $data['view'];
+           $imageName = $year.'-'.$season.'-'.$series.'-'.$location.'-'.$image_view.'-'.$view.'.'.$ext;
+           $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
+           $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
         }
 
 
@@ -303,10 +317,10 @@ class SeriesController extends Controller
         $filePathSave = $destinationPath.'/thumb-'.$imageName;
         $thumb->save($filePathSave);
 
-        $thumbName = $year.'/'.$series.'/'.'thumbs/'.$imageName;
+        //$thumbName = $year.'/'.$series.'/'.'thumbs/'.$imageName;
         Storage::disk('s3')->put($thumbName, file_get_contents($filePathSave),'public');
 
-        $originalImageName = $year.'/'.$series.'/'.$imageName;
+        //$originalImageName = $year.'/'.$series.'/'.$imageName;
         Storage::disk('s3')->put($originalImageName, file_get_contents($image),'public');
 
         $originalImageUrl = Storage::disk('s3')->url($originalImageName);
@@ -375,14 +389,29 @@ class SeriesController extends Controller
         $year = $data['year'];
         $location = $data['location'];
         $media_ID = $data['media_id'];
+
+        if($request->file('image')){
+            $ext = $request->image->getClientOriginalExtension();
+        }    
+
         if($series != "P" && $series != "p"){
            $season = "";
            $image_view = "";
            $view = "";
+           if($request->file('image')){
+               $imageName = $year.'-'.$series.'-'.$location.'.'.$ext;
+               $originalImageName = $year.'/'.$series.'/'.$imageName;
+               $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
+            }
         }else{
            $season = $data['season'];
            $image_view = $data['image_view'];
            $view = $data['view'];
+           if($request->file('image')){
+               $imageName = $year.'-'.$season.'-'.$series.'-'.$location.'-'.$image_view.'-'.$view.'.'.$ext;
+               $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
+               $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
+            }
         }
 
 
@@ -397,10 +426,10 @@ class SeriesController extends Controller
             $filePathSave = $destinationPath.'/thumb-'.$imageName;
             $thumb->save($filePathSave);
 
-            $thumbName = $year.'/'.$series.'/'.'thumbs/'.$imageName;
+            
             Storage::disk('s3')->put($thumbName, file_get_contents($filePathSave),'public');
 
-            $originalImageName = $year.'/'.$series.'/'.$imageName;
+            
             Storage::disk('s3')->put($originalImageName, file_get_contents($image),'public');
 
             $originalImageUrl = Storage::disk('s3')->url($originalImageName);
@@ -412,7 +441,8 @@ class SeriesController extends Controller
         }
         //save the information
         $user = Auth::user(); 
-        if($series == "P" && $series == "p"){
+        if($series == "P" || $series == "p"){
+
             $mediaSave = MediaInformation::find($media_ID);
             if($request->file('image')){
                 $mediaSave->file_name = $imageName;
@@ -427,6 +457,8 @@ class SeriesController extends Controller
             $mediaSave->image_view = $image_view;
             $mediaSave->views = $view;
             $mediaSave->post_name = $location;
+
+
         }else{
             $mediaSave = MediaInformation::find($media_ID);
             $mediaSave->user_id = $user->id;
@@ -441,6 +473,7 @@ class SeriesController extends Controller
             $mediaSave->image_view = $image_view;
             $mediaSave->views = $view;
         }
+
         if($mediaSave->save()){
             $response = 'succes';
             $imageId = $mediaSave->id;
@@ -511,13 +544,15 @@ class SeriesController extends Controller
     public function uploadBatchData(Request $request)
     {
         $data = $request->all();
+        $user  = Auth::user();
         $numbersOfFile =  count($request->file('fileIndex'));
 
         $csvCount = count($request->file('csv'));
 
         $allFiles = $request->file('fileIndex');    
         if($numbersOfFile > 0 && $csvCount > 0){
-            $destinationPath = public_path('/uploads/').time();
+            $folderName = time();
+            $destinationPath = public_path('/uploads/').$folderName;
             File::makeDirectory($destinationPath, $mode = 0777, true, true);
             //upload multiple images
             foreach ($allFiles as $file) {
@@ -529,9 +564,22 @@ class SeriesController extends Controller
             $csvName = $csv->getClientOriginalName();
             $csvFile = $csv->move($destinationPath, $csvName);    
             
+            //save info into DB for cron job
+            $detail = array();
+            $detail['folderName'] = $folderName;
+            $detail['csv'] = $csvName;
+
+            $batchDetail = serialize($detail); 
+
+            $cronJob = new CronJob;
+            $cronJob->user_id = $user->id;
+            $cronJob->detail = $batchDetail;
+            $cronJob->save();
+
             $msg = "Images and CSV file has uploaded.";
             $status = "true";
             return response()->json(compact('status','msg'));    
+                
         }else{
             $msg = "Please upload both csv and image.";
             $status = "false";
