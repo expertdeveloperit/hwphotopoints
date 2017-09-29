@@ -134,7 +134,7 @@ class SeriesController extends Controller
         $years = $media = MediaInformation::select('year')->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
         //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
         //get winter data
-        $wviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->groupBy('views')->get();
+        $wviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->groupBy('views')->orderBy('views','desc')->get();
         $winterData = array();
         foreach ($wviews as $key => $value) {
                $wdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','win')->where('views',$value->views)->orderBy('year')->get();     
@@ -142,7 +142,7 @@ class SeriesController extends Controller
                $winterData[$key]['data'] = $wdata;
         }
         //summer data
-        $sviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->get();
+        $sviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->orderBy('views','desc')->get();
         $summerData = array();
         foreach ($sviews as $key => $value) {
                $sdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->where('views',$value->views)->orderBy('year')->get();     
@@ -151,7 +151,7 @@ class SeriesController extends Controller
         }
 
         //spring data
-        $sprviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->groupBy('views')->get();
+        $sprviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->groupBy('views')->orderBy('views','desc')->get();
         $springData = array();
         foreach ($sprviews as $key => $value) {
                $sprdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->where('views',$value->views)->orderBy('year')->get();     
@@ -160,7 +160,7 @@ class SeriesController extends Controller
         }
 
         //autumn data
-        $aviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->groupBy('views')->get();
+        $aviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->groupBy('views')->orderBy('views','desc')->get();
         $autumnData = array();
         foreach ($aviews as $key => $value) {
                $adata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->where('views',$value->views)->orderBy('year')->get();     
