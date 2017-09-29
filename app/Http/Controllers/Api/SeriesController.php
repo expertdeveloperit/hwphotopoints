@@ -313,7 +313,7 @@ class SeriesController extends Controller
             $constraint->aspectRatio(); //maintain image ratio
         });
 
-        $destinationPath = public_path('/uploads/');
+        $destinationPath = '/var/sites/b/backend.hwphotopoints.org.uk/public/uploads';
         $filePathSave = $destinationPath.'/thumb-'.$imageName;
         $thumb->save($filePathSave);
 
