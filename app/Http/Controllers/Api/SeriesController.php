@@ -187,20 +187,13 @@ class SeriesController extends Controller
         foreach ($allViews as $key => $value) {
                $ViewsData[$key]['view'] =  $value->views;
                
-               $sudata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','sum')->orderBy('year')->get();     
-               if($sudata->count() > 0){
-                   $sutotalData['season'] = "SUMMER";
-                   $ViewsData[$key]['data'][] = $sutotalData;
-                   $sutotalData['info'] = $sudata;
-                   $information[] = $sutotalData;
-               } 
                $widata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','win')->orderBy('year')->get();     
                if($widata->count() > 0){
                    $wtotalData['season'] = "WINTER";
                    $ViewsData[$key]['data'][] = $wtotalData;
                    $wtotalData['info'] = $widata;
                    $information[] = $wtotalData;
-               } 
+               }
 
                $spdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','spr')->orderBy('year')->get();     
                if($spdata->count() > 0){
@@ -209,6 +202,17 @@ class SeriesController extends Controller
                     $stotalData['info'] = $spdata;
                     $information[] = $stotalData;
                }
+                
+               
+               $sudata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','sum')->orderBy('year')->get();     
+               if($sudata->count() > 0){
+                   $sutotalData['season'] = "SUMMER";
+                   $ViewsData[$key]['data'][] = $sutotalData;
+                   $sutotalData['info'] = $sudata;
+                   $information[] = $sutotalData;
+               } 
+               
+
 
 
                $audata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('views',$value->views)->where('season','aut')->orderBy('year')->get();     
@@ -313,7 +317,7 @@ class SeriesController extends Controller
             $constraint->aspectRatio(); //maintain image ratio
         });
 
-        $destinationPath = '/var/sites/b/backend.hwphotopoints.org.uk/public/uploads';
+        $destinationPath = public_path('/uploads');
         $filePathSave = $destinationPath.'/thumb-'.$imageName;
         $thumb->save($filePathSave);
 
