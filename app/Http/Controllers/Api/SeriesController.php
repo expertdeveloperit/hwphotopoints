@@ -500,19 +500,8 @@ class SeriesController extends Controller
           
          if($mediaInfo){
             $status = "true";
-            $url = $mediaInfo->file_location_aws;
-            $exifData = array();    
             
-            $exif = exif_read_data($url, 0, true);
-            foreach ($exif as $key => $section) {
-                foreach ($section as $name => $val) {
-                    if($name=='MakerNote')
-                        continue;
-                    $exifData[] =  $key.$name. $val;
-                }
-            } 
-            
-            return response()->json(compact('status','mediaInfo','exifData'));
+            return response()->json(compact('status','mediaInfo'));
          }else {
             $msg = "No data found";
             $status = "false";
