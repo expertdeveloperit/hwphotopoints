@@ -502,19 +502,15 @@ class SeriesController extends Controller
             $status = "true";
             $url = $mediaInfo->file_location_aws;
             $exifData = array();    
-            //$exif = exif_read_data($url, 'IFD0');
-            // if($exif===false) { 
-            //     $exifmsg = "No exif data found."; $exifstatus="false"; 
-            // }else{
-            //     $exifstatus="true";
-            //     // $exif = exif_read_data($url, 0, true);
-            //     // foreach ($exif as $key => $section) {
-            //     //     foreach ($section as $name => $val) {
-            //     //         //$exifData[] = $key.$name.$val;
-            //     //         echo $key."@@".$name."@@".$val;
-            //     //     }
-            //     // }
-            // }    
+            
+            $exif = exif_read_data($url, 0, true);
+            foreach ($exif as $key => $section) {
+                foreach ($section as $name => $val) {
+                    if($name=='MakerNote')
+                        continue;
+                    $exifData[] =  $key.$name. $val;
+                }
+            } 
             
             return response()->json(compact('status','mediaInfo','exifData'));
          }else {
