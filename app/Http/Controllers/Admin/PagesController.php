@@ -8,6 +8,9 @@ use App\AdminPages;
 class PagesController extends Controller
 {
     public function index(){
+        $url = 'https://heartwood.s3.amazonaws.com/2015/S/2015-S-S001A.jpg';
+         $exif = exif_read_data($url, 0, true);
+         print_r($exif);
     	$allPages = AdminPages::all();
     	return view('admin.pages.home',['allPages' => $allPages]);
 
