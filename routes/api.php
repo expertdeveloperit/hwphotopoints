@@ -22,7 +22,7 @@ Route::post('user/login','Api\UserAuthenticate@authenticate');
 Route::post('forgetpassword','Api\UserAuthenticate@forgetPassword');
 Route::get('resetpassword/key/{key}','Api\UserAuthenticate@validateResetKey');
 Route::post('reset/password','Api\UserAuthenticate@resetPassword');
-
+Route::get('pages/title','Api\PagesController@getPagesTitle');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('page/{id?}','Api\PagesController@index');

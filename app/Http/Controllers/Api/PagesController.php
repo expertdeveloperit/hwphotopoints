@@ -24,4 +24,14 @@ class PagesController extends Controller
             return response()->json(compact('data'));
         }	
     }
+    public function getPagesTitle(Request $request,$id = null)
+    {
+    	
+            $pages = AdminPages::all();
+            foreach ($pages as $key => $page) {
+            	$data[] = $page['title'];
+            }
+            return response()->json(compact('data'));
+        	
+    }
 }

@@ -181,7 +181,7 @@ class SeriesController extends Controller
         $years = $media = MediaInformation::select('year')->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
         //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
         //get winter data
-        $allViews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->get();
+        $allViews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderBy('views','desc')->get();
         $ViewsData = array();
         $information = array();
         foreach ($allViews as $key => $value) {
@@ -240,7 +240,7 @@ class SeriesController extends Controller
         $ViewsData = array();
         $information = array();
                
-        $views = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->get();     
+        $views = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderBy('views','desc')->get();     
         foreach ($views as $viewkey => $viewvalue) {
             $ViewsData[$viewkey]['name'] = $viewvalue->views;
             $index = 0;
