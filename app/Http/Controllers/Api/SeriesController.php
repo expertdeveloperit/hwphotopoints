@@ -283,6 +283,7 @@ class SeriesController extends Controller
 
     public function uploadData(Request $request)
     {
+       
         $data = $request->all();
 
         $this->validate($request, [
@@ -495,8 +496,7 @@ class SeriesController extends Controller
 
     public function imageDetail(Request $request, $id = null)
     {
-        $user = Auth::user();
-        $mediaInfo = $user->userMedia->where('id',$id)->first();   
+        $mediaInfo = MediaInformation::where('id',$id)->first();   
           
          if($mediaInfo){
             $status = "true";
@@ -512,6 +512,7 @@ class SeriesController extends Controller
 
     public function imageDelete(Request $request, $id = null)
     {
+        
        $user = Auth::user(); 
         $mediaInfo = $user->userMedia->where('id',$id)->first();  
         if($mediaInfo){

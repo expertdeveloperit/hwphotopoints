@@ -38,10 +38,14 @@ class UserAuthenticate extends Controller
 
         if($user->userMeta->role == "1" || $user->userMeta->role == "2"){
             $status = true;
+            $user['role'] = "admin";
             return response()->json(compact('token','user','status'));    
         }else{
-            JWTAuth::setToken($token)->invalidate();
-            return response()->json(['error' => "Your can't access this area.",'status'=>false]);
+            $status = true;
+            $user['role'] = "visitor";
+            return response()->json(compact('token','user','status'));    
+            // JWTAuth::setToken($token)->invalidate();
+            // return response()->json(['error' => "Your can't access this area.",'status'=>false]);
         }	
         // all good so return the token
         
