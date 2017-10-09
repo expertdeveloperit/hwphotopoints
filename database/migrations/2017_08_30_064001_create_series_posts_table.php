@@ -19,7 +19,7 @@ class CreateSeriesPostsTable extends Migration
             $table->foreign('series_id')->references('id')->on('series');
             $table->string('title');
             $table->string('year');
-            $table->longText('description');
+            $table->string('description');
             $table->timestamps();
         });
     }

@@ -38,6 +38,20 @@
                         <label>Year</label>
                         <input type="text" name="year" value="{{$editseries['year']}}" class="form-control" id="titile" placeholder="2019">
                       </div>
+                      <?php 
+                      $string = $editseries['title'];
+                      $seriesTitle = substr($string, 0, 1); 
+
+                      ?>
+                      <div class="form-group @if($seriesTitle != 'p' && $seriesTitle != 'P') hidden  @endif">
+                        <label>View Order</label>
+
+                        <select name="ordertype"  class="form-control">
+                          <option>Select</option>
+                          <option value="desc" @if($editseries['description'] == 'desc') selected @endif>SIN to PAN</option>
+                          <option value="asc" @if($editseries['description'] == 'asc') selected @endif>PAN to SIN</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
               </div>                 
@@ -79,6 +93,15 @@
                       <div class="form-group">
                         <label>Year</label>
                         <input type="textarea" name="year" value="{{ old('year') }}" class="form-control" id="titile" placeholder="Description">
+                      </div>
+
+                      <div class="form-group @if($seriesName != 'p') hidden  @endif"> 
+                        <label>View Order</label>
+                        <select name="ordertype" class="form-control">
+                          <option>Select</option>
+                          <option value="desc">SIN to PAN</option>
+                          <option value="asc" >PAN to SIN</option>
+                        </select>
                       </div>
                     </div>
                   </div>

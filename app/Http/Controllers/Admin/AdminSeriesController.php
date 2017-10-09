@@ -81,7 +81,7 @@ class AdminSeriesController extends Controller
                 $series->series_id = $seriesData['id'];
             	$series->title = $data['title'];
                 $series->year = $data['year'];
-                $series->description = "";
+                $series->description = $data['ordertype'];
                 $series->save();
             }    
         	return redirect()->route('specificSeries',$seriesName);
@@ -112,6 +112,7 @@ class AdminSeriesController extends Controller
         	$series = SeriesPosts::find($id);	
         	$series->title = $data['title'];
         	$series->year = $data['year'];
+            $series->description = $data['ordertype'];
         	$series->save();
             
             $editseries = SeriesPosts::find($id);
