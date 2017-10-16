@@ -77,7 +77,7 @@ class SeriesController extends Controller
         foreach ($getType as $key => $value) {
             $imageTypes[] = $value['image_view'];
         }
-        $types = array_unique($imageTypes);
+        $types = array_values(array_unique($imageTypes));
     	return response()->json(compact('types'));     		
     }
 
