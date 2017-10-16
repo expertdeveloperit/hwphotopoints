@@ -24,6 +24,8 @@ class CronJobController extends Controller
 		$allJobs = CronJob::all();
 		if($allJobs){
 			foreach ($allJobs as $key => $job) {
+				 $userID = $job->user_id; 
+					       
 				$jobData = $job->detail;
 				$jobDetail = unserialize($jobData);
 
@@ -87,14 +89,13 @@ class CronJobController extends Controller
 					        $thumbImageUrl = Storage::disk('s3')->url($thumbName);
 
 					        //save the information
-					        $user = Auth::user(); 
 					        if($series == "P" && $series == "p"){
 					            MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
-					            $mediaSave->user_id = $user->id;
+					            $mediaSave->user_id = $userID;
 					            $mediaSave->file_name = $imageName;
 					            $mediaSave->file_location_aws = $originalImageUrl;
 					            $mediaSave->file_thumb_location_aws = $thumbImageUrl;
-					            $mediaSave->uploaded_by = $user->name;
+					            $mediaSave->uploaded_by = '';
 					            $mediaSave->uploading_date = date('y-m-d');
 					            $mediaSave->year = $year;
 					            $mediaSave->season = $season;
@@ -104,11 +105,11 @@ class CronJobController extends Controller
 					            $mediaSave->post_name = $location;
 					        }else{
 					            $mediaSave = MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location]);
-					            $mediaSave->user_id = $user->id;
+					            $mediaSave->user_id = $userID;
 					            $mediaSave->file_name = $imageName;
 					            $mediaSave->file_location_aws = $originalImageUrl;
 					            $mediaSave->file_thumb_location_aws = $thumbImageUrl;
-					            $mediaSave->uploaded_by = $user->name;
+					            $mediaSave->uploaded_by = '';
 					            $mediaSave->uploading_date = date('y-m-d');
 					            $mediaSave->season = $season;
 					            $mediaSave->image_view = $image_view;
@@ -129,11 +130,11 @@ class CronJobController extends Controller
 				CronJob::destroy($job->id);
 
 				//delete files
-			   	//$this->delete_files($destinationPath);		
+			   	$this->delete_files($destinationPath);		
 
 
 			   	//send email to user
-			   	$user  = User::find($job->user_id);	    
+			   	$user  = User::find($userID);	    
 			   	$to = $user->email;
             	$subject = "HW Photo Points Batch Upload.";
 	            

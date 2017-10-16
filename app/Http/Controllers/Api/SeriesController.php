@@ -90,7 +90,7 @@ class SeriesController extends Controller
         $location = $data['location'];
         $image_view = $data['image_view'];
 
-        $postId = SeriesPosts::select('id')->where('title','=',$location)->where('year','=',$year)->first();
+         $postId = SeriesPosts::select('id')->where('title','=',$location)->first();
          if($postId){
             if($postId->count() > 0){
                $getValue = SeriesPostViews::where('series_list_id','=',$postId->id)->where('image_view','=',$image_view)->get();
@@ -543,7 +543,7 @@ class SeriesController extends Controller
         $mediaInfo = $user->userMedia->where('id',$id)->first();  
         if($mediaInfo){
             if($mediaInfo->delete()){
-                $msg = "Image has deleted.";
+                $msg = "Image has been deleted.";
                 $status = "true";
                 return response()->json(compact('status','msg'));
             }
