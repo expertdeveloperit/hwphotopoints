@@ -15,7 +15,7 @@ class Visitor
      */
     public function handle($request,Closure $next)
     {   
-        if(Auth::user()->role = 3){
+        if(Auth::user()->role == 3){
             return response()->json(['error' => "Your can't access this area.",'status'=>false]);
         }
 
