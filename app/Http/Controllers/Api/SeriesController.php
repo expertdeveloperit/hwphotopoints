@@ -24,11 +24,16 @@ class SeriesController extends Controller
     public function getYear(Request $request)
     {
     	$data = $request->all();
-    	$seriesName = $data['series'];
-    	$seriesData = Series::select('start_year')->where('name','=',$seriesName)->first();
-    	//$years = SeriesPosts::select('year')->where('series_id','=',$seriesData->id)->orderBy('year','Asc')->first();
-		 $years = $seriesData; 
-		return response()->json(compact('years'));
+        if(isset($data['series'])){
+        	$seriesName = $data['series'];
+        	$seriesData = Series::select('start_year')->where('name','=',$seriesName)->first();
+        	//$years = SeriesPosts::select('year')->where('series_id','=',$seriesData->id)->orderBy('year','Asc')->first();
+    		 $years = $seriesData; 
+    		
+        }else{
+            $years = "";
+        }
+        return response()->json(compact('years'));
     }
 
     //get location name
