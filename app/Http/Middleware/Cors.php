@@ -15,7 +15,7 @@ class Cors
      */
     public function handle($request, Closure $next)
     {   
-        $domains =['http://localhost:4200','http://backend.wphackstop.com'];
+        $domains =['http://localhost:4200','http://wphackstop.com'];
         if(isset($request->server()['HTTP_ORIGIN'])){
             $origin = $request->server()['HTTP_ORIGIN'];
             
