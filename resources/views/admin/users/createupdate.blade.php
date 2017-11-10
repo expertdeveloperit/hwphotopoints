@@ -51,7 +51,7 @@
                         <select name="role"  class="form-control">
                           <option @if($user->userMeta->role == '1') {{'selected'}} @endif value="1">Admin</option>
                           <option @if($user->userMeta->role == '2') {{'selected'}} @endif value="2">Photographer</option>
-                          <option @if($user->userMeta->role == '3') {{'selected'}} @endif value="3">Subscriber</option>
+                          <option @if($user->userMeta->role == '3') {{'selected'}} @endif value="3">Visitor</option>
                         </select>
                       </div>
                       <div class="form-group">
@@ -114,7 +114,7 @@
                         <select name="role" value="" class="form-control">
                           <option  value="1">Admin</option>
                           <option  value="2">Photographer</option>
-                          <option  value="3">subscriber</option>
+                          <option  value="3">Visitor</option>
                         </select>                        
                       </div>
 
