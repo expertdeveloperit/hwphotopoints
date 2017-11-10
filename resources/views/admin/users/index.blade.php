@@ -42,7 +42,7 @@
                   <td>{{$key+1}}</td>
                   <td>{{$user->name}}</td>
                   <td>{{$user->email}}</td>    
-                  <td>@if(isset($user->userMeta)) @if($user->userMeta->role == "1") {{'Super Admin'}} @elseif($user->userMeta->role == "2") {{'Photographer'}} @elseif($user->userMeta->role == "3") {{'Subscriber'}} @endif @endif</td>                  
+                  <td>@if(isset($user->userMeta)) @if($user->userMeta->role == "1") {{'Super Admin'}} @elseif($user->userMeta->role == "2") {{'Photographer'}} @elseif($user->userMeta->role == "3") {{'Visitor'}} @endif @endif</td>                  
                    <td>
                     <a class="btn bg-green btn-flat margin" href="{{route('usersEdit',$user['id'])}}">Edit</a>
                     <a class="btn bg-red btn-flat margin" href="{{route('usersDelete',$user['id'])}}">Delete</a>

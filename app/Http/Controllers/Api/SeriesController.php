@@ -563,38 +563,61 @@ class SeriesController extends Controller
         $user  = Auth::user();
         $numbersOfFile =  count($request->file('fileIndex'));
 
-        $csvCount = count($request->file('csv'));
+        //$csvCount = count($request->file('csv'));
 
         $allFiles = $request->file('fileIndex');    
-        if($numbersOfFile > 0 && $csvCount > 0){
-            $folderName = time();
+        if($numbersOfFile > 0){
+            $string = "hwphotopo".time();
+
+            $folderName = str_shuffle($string);
             $destinationPath = public_path('/uploads/').$folderName;
             File::makeDirectory($destinationPath, $mode = 0777, true, true);
             //upload multiple images
+            $imagesNames = array();
             foreach ($allFiles as $file) {
                 $name =  $file->getClientOriginalName();
+                $name = str_replace(',', '', $name);
+                $imagesNames[] = $name;
                 $file = $file->move($destinationPath, $name);
             }
             //upload CSV
-            $csv = $request->file('csv');
-            $csvName = $csv->getClientOriginalName();
-            $csvFile = $csv->move($destinationPath, $csvName);    
+            // $csv = $request->file('csv');
+            // $csvName = $csv->getClientOriginalName();
+            // $csvFile = $csv->move($destinationPath, $csvName);    
             
             //save info into DB for cron job
-            $detail = array();
-            $detail['folderName'] = $folderName;
-            $detail['csv'] = $csvName;
+            //$detail['csv'] = $csvName;
 
-            $batchDetail = serialize($detail); 
+            
 
             $cronJob = new CronJob;
             $cronJob->user_id = $user->id;
-            $cronJob->detail = $batchDetail;
+            $cronJob->key_name = $folderName;
+            $cronJob->csv_name = "";
             $cronJob->save();
 
-            $msg = "Images and CSV file has uploaded.";
+            $csvData = array(
+                'FileName,series,year,location,season,image_type,view',
+            );
+
+            foreach($imagesNames as $key => $value) {
+                $csvData[] = $value;
+            }
+
+            
+            $fileName = 'batchupload-'.$folderName.'.csv';
+            $fp = fopen($destinationPath.'/'.$fileName, 'w');
+            foreach ($csvData as $line) {
+                $val = explode(",", $line);
+                fputcsv($fp, $val);
+            }
+            fclose($fp);
+
+            $msg = "Images has been uploaded.";
             $status = "true";
-            return response()->json(compact('status','msg'));    
+            $key = $folderName;
+            $url = url('/').'/uploads/'.$folderName.'/'.$fileName;
+            return response()->json(compact('status','msg','key','url'));    
                 
         }else{
             $msg = "Please upload both csv and image.";
@@ -602,6 +625,41 @@ class SeriesController extends Controller
             return response()->json(compact('status','msg'));
         }       
 
+    }
+
+
+    
+    public function uploadBatchCsv(Request $request)
+    {
+        $data = $request->all();
+        $user  = Auth::user();
+       
+        $csvCount = count($request->file('csv'));
+
+        if($csvCount > 0){
+            $csv = $request->file('csv');
+            $csvName = $csv->getClientOriginalName();
+            $folderDetail = explode("-",$csvName);
+            $ext = $folderDetail[1]; 
+            $arr =  explode(".",$ext);
+            $folderName = $arr[0];
+
+            $cronJob = CronJob::where('key_name',$folderName)->first();
+
+            if($cronJob){
+                $destinationPath = public_path('/uploads/').$folderName;
+                $csvFile = $csv->move($destinationPath, $csvName);  
+                $cronJob->csv_name = $csvName;
+                $cronJob->save();
+                $status = "true";
+                $msg = "Csv has been uploaded. System will automatically upload images according to CSV information.";
+            }else{
+                $status = "false";
+                $msg = "We could't find uploaded images for this CSV. Please make sure you don't rename the CSV file name. Otherwise upload the images again.";
+            }
+
+            return response()->json(compact('status','msg'));
+        }  
     }
 
 

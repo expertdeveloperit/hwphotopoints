@@ -36,6 +36,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('pseriesdetail/thirdview','Api\SeriesController@pSeriesPostsDetailThirdView');
     Route::post('seriesdetail','Api\SeriesController@anotherSeriesPostsDetail'); 
     Route::post('uploadbatchdata','Api\SeriesController@uploadBatchData')->middleware('visitor'); 
+    Route::post('uploadcsvbatchdata','Api\SeriesController@uploadBatchCsv')->middleware('visitor'); 
     Route::post('uploaddata','Api\SeriesController@uploadData')->middleware('visitor'); 
     Route::post('updatemediadata','Api\SeriesController@updateMediaData')->middleware('visitor'); 
     Route::get('imagedetail/{id}','Api\SeriesController@imageDetail'); 
