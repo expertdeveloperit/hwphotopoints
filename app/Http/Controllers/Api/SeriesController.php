@@ -652,7 +652,7 @@ class SeriesController extends Controller
                 $cronJob->csv_name = $csvName;
                 $cronJob->save();
                 $status = "true";
-                $msg = "Csv has been uploaded. System will automatically upload images according to CSV information.";
+                $msg = "Csv has been uploaded. System will automatically upload images according to CSV information in 15 minutes.";
             }else{
                 $status = "false";
                 $msg = "We could't find uploaded images for this CSV. Please make sure you don't rename the CSV file name. Otherwise upload the images again.";
