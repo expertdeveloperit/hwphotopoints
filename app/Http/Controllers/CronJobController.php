@@ -51,7 +51,7 @@ class CronJobController extends Controller
 
 							    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
 
-						        if($series != "P" && $series != "p"){
+						        if($series != "P"){
 						           $season = "";
 						           $image_view = "";
 						           $view = "";
@@ -91,8 +91,9 @@ class CronJobController extends Controller
 						        $thumbImageUrl = Storage::disk('s3')->url($thumbName);
 
 						        //save the information
-						        if($series == "P" && $series == "p"){
-						            MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
+						        
+						        if($series == "P"){
+						            $mediaSave = MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
 						            $mediaSave->user_id = $userID;
 						            $mediaSave->file_name = $imageName;
 						            $mediaSave->file_location_aws = $originalImageUrl;
