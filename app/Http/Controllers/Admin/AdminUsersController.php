@@ -39,6 +39,7 @@ class AdminUsersController extends Controller
 
 		$data = $request->all();
 		if($id){
+
 			$user = User::find($id);
 			$user->name = $data['name'];
 			$user->email = $data['email'];
@@ -47,7 +48,7 @@ class AdminUsersController extends Controller
 			}
 			$user->save();
 
-			$userMeta = UserMeta::where('user_id' , '=', $id);
+			$userMeta = UserMeta::where('user_id' , '=', $id)->first();
 			$userMeta->role = $data['role'];
 			$userMeta->status = $data['status'];
 			$userMeta->save();
