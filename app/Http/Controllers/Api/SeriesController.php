@@ -613,7 +613,7 @@ class SeriesController extends Controller
             }
             fclose($fp);
 
-            $msg = "Images has been uploaded.";
+            $msg = "Images have been uploaded.";
             $status = "true";
             $key = $folderName;
             $url = url('/').'/uploads/'.$folderName.'/'.$fileName;
