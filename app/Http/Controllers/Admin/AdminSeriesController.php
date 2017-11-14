@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Series;
+use App\MediaInformation;
+use App\SeriesPostViews;
 use App\SeriesPosts;
 use Session;
 use Validator;
@@ -127,6 +129,13 @@ class AdminSeriesController extends Controller
     //delete the series
     public function delete(Request $request, $seriesName = null, $id = null){
         if($id){
+            $seriesPostDetail = SeriesPosts::find($id);
+            $seriesId = $seriesPostDetail->series_id;
+            $postName = $seriesPostDetail->title;
+            $seriesDetail = Series::find($seriesId);
+            $name = $seriesDetail->name;
+            MediaInformation::where('series',$name)->where("post_name",$postName)->delete();
+            SeriesPostViews::where('series_list_id',$id)->delete();
             SeriesPosts::destroy($id);            
         }
         Session::flash('message', ucfirst($seriesName).' Post has been deleted!');
