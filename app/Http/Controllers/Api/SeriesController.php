@@ -294,11 +294,11 @@ class SeriesController extends Controller
         
         $years = MediaInformation::select('year')->where('series','=',$seriesName)->groupBy('year')->orderBy('year')->get();
         //get winter data
-        $views_name = MediaInformation::select('views')->where('series','=',$seriesName)->groupBy('views')->get();
+        $views_name = MediaInformation::select('post_name')->where('series','=',$seriesName)->groupBy('post_name')->get();
         $seriesData = array();
         foreach ($views_name as $key => $value) {
-               $wdata = MediaInformation::select('id','file_location_aws','file_thumb_location_aws','post_name','year','series')->where('series','=',$seriesName)->where('views','=',$value->views)->orderBy('year')->get();     
-               $seriesData[$key]['view'] =  $value->views;
+               $wdata = MediaInformation::select('id','file_location_aws','file_thumb_location_aws','post_name','year','series')->where('series','=',$seriesName)->where('post_name','=',$value->post_name)->orderBy('year')->get();     
+               $seriesData[$key]['view'] =  $value->post_name;
                $seriesData[$key]['data'] = $wdata;
         }
 
@@ -389,6 +389,7 @@ class SeriesController extends Controller
             $mediaSave->season = $season;
             $mediaSave->image_view = $image_view;
             $mediaSave->views = $view;
+            $mediaSave->post_name = $location;
         }
         if($mediaSave->save()){
             $response = 'succes';
@@ -503,6 +504,7 @@ class SeriesController extends Controller
             $mediaSave->season = $season;
             $mediaSave->image_view = $image_view;
             $mediaSave->views = $view;
+            $mediaSave->post_name = $location;
         }
 
         if($mediaSave->save()){

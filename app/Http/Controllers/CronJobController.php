@@ -117,6 +117,7 @@ class CronJobController extends Controller
 						            $mediaSave->season = $season;
 						            $mediaSave->image_view = $image_view;
 						            $mediaSave->views = $view;
+						            $mediaSave->post_name = $location;
 						        }
 						        if($mediaSave->save()){
 						            
