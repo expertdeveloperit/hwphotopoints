@@ -131,6 +131,16 @@ class SeriesController extends Controller
         return response()->json(compact('posts'));
     }
 
+    public function getOrderOfViews($series,$postName){
+        $id = SeriesPosts::select('id')->where('series_id',$series)->where('title',$postName)->first();
+        $views = SeriesPostViews::select('value')->where('series_list_id',$id->id)->get();
+        $allViews = array();
+        foreach ($views as $key => $value) {
+            $allViews[] = $value->value;
+        }
+        return $allViews;
+    }
+
     //p series Posts  Detail
     public function pSeriesPostsDetailFirstView(Request $request){
         $data = $request->all();
@@ -144,17 +154,21 @@ class SeriesController extends Controller
         }
 
         $years = $media = MediaInformation::select('year')->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
-        //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
         //get winter data
-        $wviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->groupBy('views')->orderBy('views',$order)->get();
+        $viewsList =  $this->getOrderOfViews('1',$postName);
+        $ids_ordered = '"'.implode('","', $viewsList).'"';
+
+        $wviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','win')->whereIn('views', $viewsList)->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
+
         $winterData = array();
         foreach ($wviews as $key => $value) {
                $wdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','win')->where('views',$value->views)->orderBy('year')->get();     
                $winterData[$key]['view'] =  $value->views;
                $winterData[$key]['data'] = $wdata;
         }
+
         //summer data
-        $sviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->orderBy('views',$order)->get();
+        $sviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
         $summerData = array();
         foreach ($sviews as $key => $value) {
                $sdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->where('views',$value->views)->orderBy('year')->get();     
@@ -163,7 +177,7 @@ class SeriesController extends Controller
         }
 
         //spring data
-        $sprviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->groupBy('views')->orderBy('views',$order)->get();
+        $sprviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
         $springData = array();
         foreach ($sprviews as $key => $value) {
                $sprdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','spr')->where('views',$value->views)->orderBy('year')->get();     
@@ -172,7 +186,7 @@ class SeriesController extends Controller
         }
 
         //autumn data
-        $aviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->groupBy('views')->orderBy('views',$order)->get();
+        $aviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
         $autumnData = array();
         foreach ($aviews as $key => $value) {
                $adata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','aut')->where('views',$value->views)->orderBy('year')->get();     
@@ -197,10 +211,14 @@ class SeriesController extends Controller
             $order = 'desc';
         }
 
+        $viewsList =  $this->getOrderOfViews('1',$postName);
+        $ids_ordered = '"'.implode('","', $viewsList).'"';
+        
+
         $years = $media = MediaInformation::select('year')->where('series','=','P')->where('post_name','=',$postName)->groupBy('year')->orderBy('year')->get();
         //$media = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->orderBy('season','DESC')->get();
         //get winter data
-        $allViews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderBy('views',$order)->get();
+        $allViews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
         $ViewsData = array();
         $information = array();
         foreach ($allViews as $key => $value) {
@@ -255,6 +273,9 @@ class SeriesController extends Controller
         $postName = $data['postname'];                    
         $userId = Auth::user()->id;    
 
+        $viewsList =  $this->getOrderOfViews('1',$postName);
+        $ids_ordered = '"'.implode('","', $viewsList).'"';
+        
         $locationDetail = SeriesPosts::where('title',$postName)->first();
         $order = $locationDetail->description;
         if($order == ''){
@@ -266,7 +287,7 @@ class SeriesController extends Controller
         $ViewsData = array();
         $information = array();
                
-        $views = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderBy('views', $order)->get();     
+        $views = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();     
         foreach ($views as $viewkey => $viewvalue) {
             $ViewsData[$viewkey]['name'] = $viewvalue->views;
             $index = 0;
