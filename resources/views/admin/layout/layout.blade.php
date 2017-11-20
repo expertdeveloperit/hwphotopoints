@@ -23,6 +23,7 @@
   <!-- jQuery 3 -->
   <script src="{{asset('js/jquery.min.js')}}"></script>
   <script src="{{asset('js/ckeditor/ckeditor.js')}}"></script>
+  <script src="{{asset('js/jquery-ui.js')}}"></script>
 </head>
 <body class="hold-transition skin-green sidebar-mini">
 <!-- Site wrapper -->
@@ -45,7 +46,6 @@
 <script src="{{asset('js/adminlte.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('js/demo.js')}}"></script>
-
 
 </body>
 </html>

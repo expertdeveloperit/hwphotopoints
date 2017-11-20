@@ -15,7 +15,7 @@ class SeriesViewController extends Controller
     // specific series view
     public function index(Request $request, $id = null){
     	$post = SeriesPosts::where('id','=',$id)->first();
-    	$views = SeriesPostViews::where('series_list_id','=',$id)->get();	
+    	$views = SeriesPostViews::where('series_list_id','=',$id)->orderBy('sort','ASC')->get();	
     	return view('admin.series.view.index',['views'=>$views,'post'=>$post]);
     }
     
@@ -45,7 +45,7 @@ class SeriesViewController extends Controller
         	$view->value = $data['value'];
         	$view->pan_view = $data['pan_view'];
         	$view->description = "";
-        	$view->save();
+            $view->save();
             
             $editview = $view;
 
@@ -97,5 +97,20 @@ class SeriesViewController extends Controller
             Session::flash('error',$validator->messages()->first());
             return Redirect::back()->withInput($request->input());
         }
+    }
+
+    public function sorting(Request $request)
+    {
+        $data = $request->all();
+        foreach ($data['data'] as $key => $value) {
+            if($value){
+                $view = SeriesPostViews::find($value);     
+                if($view){
+                    $view->sort = $key+1;
+                    $view->save();
+                }
+            }
+        } 
+        return "true";
     }
 }

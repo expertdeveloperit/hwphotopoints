@@ -3,6 +3,7 @@
 @section('content')
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    <input type="hidden" id="sortUrl" value="{{URL::to('/')}}/admin/series/views/order/sort">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -24,6 +25,7 @@
               <a class="btn bg-green btn-flat margin" href="{{route('seriesViewEdit',$post['id'])}}">Add New</a>
         </div>  
         <div class="box-body">
+          <p class="ajax-alert alert-info"></p>
           @if(Session::has('message'))
               <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
           @endif
@@ -32,6 +34,7 @@
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                 <tr>
+                  <th></th>
                   <th>S.No</th>
                   <th>Post Name</th>
                   <th>Image View</th>
@@ -40,10 +43,11 @@
                   <th>Action</th> 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="sortable">
 
                 @foreach($views as $key=>$view)  
-                <tr>
+                <tr class="ui-state-default" id-data="{{$view['id']}}">
+                  <td><i class="fa fa-arrows" aria-hidden="true"></i></td>
                   <td>{{$key + 1}}</td>
                   <td>{{$post['title']}}</td>
                   <td>{{$view['image_view']}}</td>
@@ -74,4 +78,36 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <script type="text/javascript">
+    jQuery( function() {
+    jQuery( "#sortable" ).sortable({
+    stop: function( event, ui ) {
+      var array = [];
+      var ids = jQuery("#sortable tr").each(function() {
+        var data = jQuery(this).attr("id-data");
+          array.push(data);
+      });   
+      var url = jQuery("#sortUrl").val();
+      jQuery.ajax({
+        type: "POST",
+        url: url,
+        data: {data:array,"_token": "{{ csrf_token() }}"},
+        dataType: "json",
+        success: function(resultData) { 
+            jQuery(".ajax-alert").html("View sort has been updated.");
+            setTimeout(function(){
+              jQuery(".ajax-alert").html("");
+            },1500);
+        }
+      });
+      
+    }
+    });
+    
+  } );
+
+  </script>
+
 @endsection
+

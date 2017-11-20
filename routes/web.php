@@ -54,6 +54,7 @@ Route::post('/admin/series/views/create/{postId?}','Admin\SeriesViewController@c
 Route::get('/admin/series/views/edit/{postId?}/{id?}','Admin\SeriesViewController@edit')->name('seriesViewEdit');
 Route::post('/admin/series/views/update/{postId?}/{id?}','Admin\SeriesViewController@update')->name('seriesViewUpdate');
 Route::get('/admin/series/views/delete/{postId?}/{id?}','Admin\SeriesViewController@delete')->name('seriesViewDelete');
+Route::post('/admin/series/views/order/sort','Admin\SeriesViewController@sorting')->name('sorting');
 
 //Users
 Route::get('/admin/users','Admin\AdminUsersController@index')->name('usersList');
