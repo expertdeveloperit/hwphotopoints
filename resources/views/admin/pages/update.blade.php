@@ -52,8 +52,8 @@
 <script>
   $(function () {
     // Replace the <textarea id="editor1"> with a CKEditor
-    // instance, using default configuration.
-    CKEDITOR.replace('editor')
+   var edit = CKEDITOR.replace('editor');
+    edit.config.allowedContent = true;
     //bootstrap WYSIHTML5 - text editor
 
   })
