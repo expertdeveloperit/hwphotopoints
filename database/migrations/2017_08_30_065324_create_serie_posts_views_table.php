@@ -20,6 +20,7 @@ class CreateSeriePostsViewsTable extends Migration
             $table->string('image_view');
             $table->string('value');
             $table->string('pan_view');
+            $table->integer('sort');
             $table->longText('description');
             $table->timestamps();
         });

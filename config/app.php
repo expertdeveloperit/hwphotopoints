@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         Intervention\Image\ImageServiceProvider::class,
+        Plank\Mediable\MediableServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -228,7 +229,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
         'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'MediaUploader' => Plank\Mediable\MediaUploaderFacade::class,
     ],
 
 ];

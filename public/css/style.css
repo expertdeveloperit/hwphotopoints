@@ -1,0 +1,12 @@
+.copy-alert{
+    position: fixed;
+    border: 2px solid #082b15;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 16px;
+    left: 46%;
+    top: 20%;
+    color: #fff;
+    display: none;
+    background: #2fa65b;
+}

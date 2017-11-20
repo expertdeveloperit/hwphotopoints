@@ -56,6 +56,14 @@ Route::post('/admin/series/views/update/{postId?}/{id?}','Admin\SeriesViewContro
 Route::get('/admin/series/views/delete/{postId?}/{id?}','Admin\SeriesViewController@delete')->name('seriesViewDelete');
 Route::post('/admin/series/views/order/sort','Admin\SeriesViewController@sorting')->name('sorting');
 
+
+//media
+Route::get('/admin/media','Admin\MediaController@index')->name('mediaView');
+Route::get('/admin/media/add','Admin\MediaController@add')->name('mediaAddView');
+Route::post('/admin/media/add','Admin\MediaController@create')->name('addNewMedia');
+Route::get('/admin/media/delete/{id?}','Admin\MediaController@delete')->name('mediaDelete');
+
+
 //Users
 Route::get('/admin/users','Admin\AdminUsersController@index')->name('usersList');
 Route::get('/admin/user/edit/{id?}','Admin\AdminUsersController@edit')->name('usersEdit');

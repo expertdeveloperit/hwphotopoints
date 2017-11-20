@@ -15,6 +15,19 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
+        <li class="treeview {{ (Request::is('admin/media'. '*') ? 'active' : '') }}">
+          <a href="#">
+            <i class="fa fa-user"></i> <span>Media</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{route('mediaView')}}"><i class="fa fa-circle-o"></i> Media</a></li>
+            <li><a href="{{route('mediaAddView')}}"><i class="fa fa-circle-o"></i> Add New</a></li>
+          </ul>
+        </li>
+
         <li class="treeview {{ (Request::is('admin/page'. '*') ? 'active' : '') }}">
           <a href="#">
             <i class="fa fa-files-o"></i> <span>Pages</span>
