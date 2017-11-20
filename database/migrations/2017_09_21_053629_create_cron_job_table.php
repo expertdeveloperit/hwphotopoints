@@ -16,7 +16,8 @@ class CreateCronJobTable extends Migration
          Schema::create('cron_job', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_id')->nullable();
-            $table->longText('detail');
+            $table->string('key_name');
+            $table->string('csv_name');
             $table->timestamps();
         });
     }
