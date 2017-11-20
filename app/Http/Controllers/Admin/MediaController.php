@@ -19,7 +19,7 @@ class MediaController extends Controller
 
     // all series list
     public function index(){
-    	$media = Media::paginate(2);
+    	$media = Media::paginate(10);
     	return view('admin.media.index',['media'=>$media]);
     }
 
