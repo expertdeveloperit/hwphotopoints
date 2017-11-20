@@ -133,7 +133,7 @@ class SeriesController extends Controller
 
     public function getOrderOfViews($series,$postName){
         $id = SeriesPosts::select('id')->where('series_id',$series)->where('title',$postName)->first();
-        $views = SeriesPostViews::select('value')->where('series_list_id',$id->id)->get();
+        $views = SeriesPostViews::select('value')->where('series_list_id',$id->id)->orderBy('sort','ASC')->get();
         $allViews = array();
         foreach ($views as $key => $value) {
             $allViews[] = $value->value;
