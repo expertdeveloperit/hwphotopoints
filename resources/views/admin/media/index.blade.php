@@ -21,7 +21,7 @@
         <div class="box-body">
           <span class="copy-alert">Copied</span>
           <div class="content-area">
-          
+
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                 <tr>
@@ -39,7 +39,7 @@
                         <img style="max-width:100px;" src="{{URL('/uploads/media')}}/{{$img->directory}}/{{$img->name}}">
                       </td>
                       <td>
-                        <input type="text" class="urlCopy" value="{{URL('/uploads/media')}}/{{$img->directory}}{{$img->name}}" readonly>
+                        <input type="text" class="urlCopy" value="{{URL('/uploads/media')}}/{{$img->directory}}{{$img->name}}" readonly style="width:100%;">
                       </td>
                       <td>
                         <a class="btn btn-primary" href="{{route('mediaDelete',$img->id)}}">Delete</a>
