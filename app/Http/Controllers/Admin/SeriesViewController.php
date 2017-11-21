@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Series;
 use App\SeriesPosts;
 use App\SeriesPostViews;
+use App\MediaInformation;
 use Session;
 use Validator;
 use Redirect;
@@ -80,14 +81,23 @@ class SeriesViewController extends Controller
         $validator = Validator::make($data, $rules);
         if($validator->passes()){
 
-        	$series = SeriesPostViews::find($id);	
-        	$series->image_view = $data['image_view'];
+        	$series = SeriesPostViews::find($id);
+            $oldname = $series->value;
+            $series->image_view = $data['image_view'];
         	$series->value = $data['value'];
             if($data['pan_view']){
         	   $series->pan_view = $data['pan_view'];
             }else $series->pan_view ="";
         	$series->save();
             
+            //update view name in media table
+            if($oldname != $data['value']){
+                $seriesDetail = SeriesPosts::find($series->series_list_id);
+                $seriesTitle = $seriesDetail->title;
+                MediaInformation::where('views',$oldname)->where('post_name',$seriesTitle)->update(['views' => $data['value']]);
+            }
+
+
             $editview = SeriesPostViews::find($id);
 
             Session::flash('message', 'View data has been updated!'); 
