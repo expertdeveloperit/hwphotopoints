@@ -531,6 +531,7 @@ class SeriesController extends Controller
             $mediaSave->image_view = $image_view;
             $mediaSave->views = $view;
             $mediaSave->post_name = $location;
+            $mediaSave->year = $year;
         }
 
         if($mediaSave->save()){
