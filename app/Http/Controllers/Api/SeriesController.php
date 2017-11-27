@@ -343,6 +343,7 @@ class SeriesController extends Controller
         $ext = $request->image->getClientOriginalExtension();
 
         if($series != "P" && $series != "p"){
+
            $season = "";
            $image_view = "";
            $view = "";
@@ -350,6 +351,7 @@ class SeriesController extends Controller
            $originalImageName = $year.'/'.$series.'/'.$imageName;
            $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
         }else{
+            
            $season = $data['season'];
            $image_view = $data['image_view'];
            $view = $data['view'];
@@ -384,9 +386,11 @@ class SeriesController extends Controller
 
         //save the information
         $user = Auth::user(); 
-        if($series == "P" && $series == "p"){
+        if($series == "P" || $series == "p"){
+            
             //$mediaSave = new MediaInformation;
-            MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
+            $mediaSave = MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view]);
+
             $mediaSave->user_id = $user->id;
             $mediaSave->file_name = $imageName;
             $mediaSave->file_location_aws = $originalImageUrl;
@@ -400,6 +404,7 @@ class SeriesController extends Controller
             $mediaSave->views = $view;
             $mediaSave->post_name = $location;
         }else{
+            
             $mediaSave = MediaInformation::updateOrCreate(['series'=>$series,'year'=>$year,'post_name'=>$location]);
             $mediaSave->user_id = $user->id;
             $mediaSave->file_name = $imageName;
