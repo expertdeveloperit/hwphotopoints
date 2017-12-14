@@ -46,7 +46,7 @@ class CronJobController extends Controller
 					        $location = strtoupper($line[3]);
 
 					        echo $filePath = $destinationPath.$fileName;
-
+					        exit;
 					        if(file_exists($filePath)){
 
 							    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
