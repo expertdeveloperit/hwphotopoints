@@ -45,7 +45,7 @@ class CronJobController extends Controller
 					        $year = $line[2];
 					        $location = strtoupper($line[3]);
 
-					        $filePath = $destinationPath.$fileName;
+					        echo $filePath = $destinationPath.$fileName;
 
 					        if(file_exists($filePath)){
 
