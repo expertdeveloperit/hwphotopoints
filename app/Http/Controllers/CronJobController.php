@@ -30,6 +30,7 @@ class CronJobController extends Controller
 				$csv = $job->csv_name;
 
 				//read CSV file
+
 				$destinationPath = public_path('/uploads/').$folderName.'/';
 				$file = fopen($destinationPath.$csv, 'r');
 				$index= 0;
@@ -44,7 +45,8 @@ class CronJobController extends Controller
 					  		$series = strtoupper($line[1]);
 					        $year = $line[2];
 					        $location = strtoupper($line[3]);
-
+					        print_r($line);
+					        
 					        echo $filePath = $destinationPath.$fileName;
 					        exit;
 					        if(file_exists($filePath)){
