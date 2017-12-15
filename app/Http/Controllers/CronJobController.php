@@ -169,10 +169,10 @@ class CronJobController extends Controller
 				fclose($file);
 				//delete database entry
 				
-				//CronJob::destroy($job->id);
+				CronJob::destroy($job->id);
 
 				//delete files
-			   	//$this->delete_files($destinationPath);		
+			   	$this->delete_files($destinationPath);		
 
 
 			   	//send email to user
