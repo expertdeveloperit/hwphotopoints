@@ -56,6 +56,7 @@ class CronJobController extends Controller
 					        
 					        $filePath = $destinationPath.$fileName;
 					        
+					        if($fileName){
 					        if(file_exists($filePath)){
 
 							    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -134,6 +135,7 @@ class CronJobController extends Controller
 						            
 						        }	
 						    } 
+							}
 						}       
 					}
 				  $index++;
@@ -152,8 +154,8 @@ class CronJobController extends Controller
 			   	$to = $user->email;
             	$subject = "HW Photo Points Batch Upload.";
 	            
-	            $txt = "Your batch upload has successfully updated.";
-	            $headers = "From: webmaster@example.com" . "\r\n";
+	            $txt = "Your batch images has been successfully uploaded.";
+	            $headers = "From: hwphotopoints@gmail.com" . "\r\n";
 
 	            mail($to,$subject,$txt,$headers);
 
