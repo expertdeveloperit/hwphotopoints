@@ -178,12 +178,12 @@ class CronJobController extends Controller
 			   	//send email to user
 			   	$user  = User::find($userID);	    
 			   	$to = $user->email;
-            	$subject = "HW Photo Points Batch Upload.";
+            	$subject = "HWPhotoPoints Batch Upload.";
 	            
-	            $message = "Your batch images has been successfully uploaded.";
+	            $message = "Your batch images have been successfully uploaded.";
 	            
-				$headers = 'From: webmaster@example.com' . "\r\n" .
-			    'Reply-To: webmaster@example.com' . "\r\n" .
+				$headers = 'From: admin@hwphotopoints.org.uk' . "\r\n" .
+			    'Reply-To: admin@hwphotopoints.org.uk' . "\r\n" .
 			    'Content-type: text/html; charset=iso-8859-1' . "\r\n".
 			    'X-Mailer: PHP/' . phpversion();
 
