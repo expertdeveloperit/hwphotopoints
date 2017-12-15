@@ -93,7 +93,7 @@ class CronJobController extends Controller
 
 						            if($mediaExist){
 						            	$upload = false;
-						            	$imagesExist .=.$series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br>";
+						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br>";
 						            	$replacedFound = true;
 						            }
 
