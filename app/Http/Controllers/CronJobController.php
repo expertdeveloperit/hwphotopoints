@@ -21,6 +21,17 @@ class CronJobController extends Controller
 
 	public function index()
 	{
+
+		 	
+			   	$to = "expert.developer.it@gmail.com";
+            	$subject = "HW Photo Points Batch Upload.";
+	            
+	            $txt = "Your batch images has been successfully uploaded.";
+	            $headers = "From: hwphotopoints@gmail.com" . "\r\n";
+
+	            mail($to,$subject,$txt,$headers);
+
+
 		$allJobs = CronJob::where('csv_name','!=',"")->get();
 		if($allJobs){
 			foreach ($allJobs as $key => $job) {
