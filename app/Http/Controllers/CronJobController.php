@@ -22,15 +22,6 @@ class CronJobController extends Controller
 	public function index()
 	{
 
-		 	
-			   	$to = "expert.developer.it@gmail.com";
-            	$subject = 'the subject';
-				$message = 'hello';
-				$headers = 'From: webmaster@example.com' . "\r\n" .
-			    'Reply-To: webmaster@example.com' . "\r\n" .
-			    'X-Mailer: PHP/' . phpversion();
-
-			mail($to, $subject, $message, $headers);
 
 		$allJobs = CronJob::where('csv_name','!=',"")->get();
 		if($allJobs){
@@ -165,11 +156,17 @@ class CronJobController extends Controller
 			   	$to = $user->email;
             	$subject = "HW Photo Points Batch Upload.";
 	            
-	            $txt = "Your batch images has been successfully uploaded.";
-	            $headers = "From: hwphotopoints@gmail.com" . "\r\n";
+	            $message = "Your batch images has been successfully uploaded.";
+	            
+				$headers = 'From: webmaster@example.com' . "\r\n" .
+			    'Reply-To: webmaster@example.com' . "\r\n" .
+			    'X-Mailer: PHP/' . phpversion();
 
-	            mail($to,$subject,$txt,$headers);
+				mail($to, $subject, $message, $headers);
 
+
+
+	           
 			}
 		}	
 	}
