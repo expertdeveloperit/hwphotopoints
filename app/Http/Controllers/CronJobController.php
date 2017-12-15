@@ -184,7 +184,9 @@ class CronJobController extends Controller
 	            
 				$headers = 'From: webmaster@example.com' . "\r\n" .
 			    'Reply-To: webmaster@example.com' . "\r\n" .
+			    'Content-type: text/html; charset=iso-8859-1' . "\r\n".
 			    'X-Mailer: PHP/' . phpversion();
+
 			    mail($to, $subject, $message, $headers);
 
 			    if($replacedFound){
