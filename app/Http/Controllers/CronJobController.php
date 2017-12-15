@@ -36,11 +36,11 @@ class CronJobController extends Controller
 				$destinationPath = public_path('/uploads/').$folderName.'/';
 				$file = fopen($destinationPath.$csv, 'r');
 				$index= 0;
+				$imagesExist = "";
+				$replacedFound = false;
 				while (($line = fgetcsv($file)) !== FALSE) {
 				  	if($index > 0){
-				  		 \Log::info($job->id);
-				  		// exit;
-
+				  		
 				  		if(isset($line[0]) && isset($line[1]) && isset($line[2]) && isset($line[3])) {
 				  			$fileName = "";
 				  			if($line[0]) $fileName = $line[0];
@@ -63,6 +63,8 @@ class CronJobController extends Controller
 
 							    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
 
+							    $upload = true;
+
 						        if($series != "P"){
 						           $season = "";
 						           $image_view = "";
@@ -70,6 +72,13 @@ class CronJobController extends Controller
 						           $imageName = $year.'-'.$series.'-'.$location.'.'.$ext;
 						           $originalImageName = $year.'/'.$series.'/'.$imageName;
 						           $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
+
+						           $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location])->exists();
+						           if($mediaExist){
+						            	$upload = false;
+						            	$imagesExist .= $series." - ".$season." - ".$year."<br>"; 
+						            	$replacedFound = true;
+						            }
 						        }else{
 						           $season = strtoupper($line[4]);
 						           $image_view = strtoupper($line[5]);
@@ -77,10 +86,21 @@ class CronJobController extends Controller
 						           $imageName = $year.'-'.$season.'-'.$series.'-'.$location.'-'.$image_view.'-'.$view.'.'.$ext;
 						           $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
 						           $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
+						            
+						            
+
+						            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
+
+						            if($mediaExist){
+						            	$upload = false;
+						            	$imagesExist .=.$series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br>";
+						            	$replacedFound = true;
+						            }
+
 						        }
 
 
-
+						    if($upload){
 
 						        //save to amazon server to original image
 						        Storage::disk('s3')->put($originalImageName, file_get_contents($filePath),'public');
@@ -135,7 +155,11 @@ class CronJobController extends Controller
 						            
 						        }else{
 						            
-						        }	
+						        }
+						    }else{
+
+
+						    }	
 						    } 
 							}
 						}       
@@ -161,9 +185,16 @@ class CronJobController extends Controller
 				$headers = 'From: webmaster@example.com' . "\r\n" .
 			    'Reply-To: webmaster@example.com' . "\r\n" .
 			    'X-Mailer: PHP/' . phpversion();
+			    mail($to, $subject, $message, $headers);
 
-				mail($to, $subject, $message, $headers);
-
+			    if($replacedFound){
+			    	$message = "Images failed for these locations because images are already exist. <br>".$imagesExist;
+	            
+					$headers = 'From: webmaster@example.com' . "\r\n" .
+				    'Reply-To: webmaster@example.com' . "\r\n" .
+				    'X-Mailer: PHP/' . phpversion();
+				    mail($to, $subject, $message, $headers);
+			    }
 
 
 	           

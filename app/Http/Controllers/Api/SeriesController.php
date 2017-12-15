@@ -350,6 +350,17 @@ class SeriesController extends Controller
            $imageName = $year.'-'.$series.'-'.$location.'.'.$ext;
            $originalImageName = $year.'/'.$series.'/'.$imageName;
            $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
+
+           $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location])->exists();
+          
+           if($mediaExist){
+                $response = 'error';
+                $msg = "Image already exist on ".$series."-".$year."-".$location;
+                 return response()->json(compact('response','msg'));  
+            }
+
+          
+
         }else{
             
            $season = $data['season'];
@@ -358,7 +369,19 @@ class SeriesController extends Controller
            $imageName = $year.'-'.$season.'-'.$series.'-'.$location.'-'.$image_view.'-'.$view.'.'.$ext;
            $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
            $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
+
+            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
+
+            if($mediaExist){
+                $response = 'error';
+                $msg = "Image already exist on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
+                 return response()->json(compact('response','msg'));  
+            }
+
         }
+
+
+
 
 
         $imageName = $year.'-'.$series.'-'.$location.'.'.$request->image->getClientOriginalExtension();
