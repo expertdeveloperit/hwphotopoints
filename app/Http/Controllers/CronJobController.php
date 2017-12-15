@@ -76,7 +76,7 @@ class CronJobController extends Controller
 						           $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location])->exists();
 						           if($mediaExist){
 						            	$upload = false;
-						            	$imagesExist .= $imageName."<br/>"; 
+						            	$imagesExist .= $series." - ".$year." - ".$location."<br/>"; 
 						            	$replacedFound = true;
 						            }
 						        }else{
@@ -93,7 +93,7 @@ class CronJobController extends Controller
 
 						            if($mediaExist){
 						            	$upload = false;
-						            	$imagesExist .= $imageName."<br/>";
+						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
 						            	$replacedFound = true;
 						            }
 
@@ -190,7 +190,7 @@ class CronJobController extends Controller
 			    
 
 			    if($replacedFound){
-			    	$message .= "<br/><br/><b color='red'>Images failed for these locations because images are already exist.</b> <br/>".$imagesExist;
+			    	$message .= "<br/><br/><b style='color:red;'>Images failed for these locations because images are already exist.</b> <br/>".$imagesExist;
 	            
 			    }
 
