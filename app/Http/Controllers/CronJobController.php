@@ -76,7 +76,7 @@ class CronJobController extends Controller
 						           $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location])->exists();
 						           if($mediaExist){
 						            	$upload = false;
-						            	$imagesExist .= $series." - ".$season." - ".$year."<br>"; 
+						            	$imagesExist .= $series." - ".$year." - ".$location."<br/>"; 
 						            	$replacedFound = true;
 						            }
 						        }else{
@@ -93,7 +93,7 @@ class CronJobController extends Controller
 
 						            if($mediaExist){
 						            	$upload = false;
-						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br>";
+						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
 						            	$replacedFound = true;
 						            }
 
@@ -188,7 +188,8 @@ class CronJobController extends Controller
 			    mail($to, $subject, $message, $headers);
 
 			    if($replacedFound){
-			    	$message = "Images failed for these locations because images are already exist. <br>".$imagesExist;
+			    	$subject = "HW Photo Points upload failed.";
+			    	$message = "Images failed for these locations because images are already exist. <br/>".$imagesExist;
 	            
 					$headers = 'From: webmaster@example.com' . "\r\n" .
 				    'Reply-To: webmaster@example.com' . "\r\n" .
