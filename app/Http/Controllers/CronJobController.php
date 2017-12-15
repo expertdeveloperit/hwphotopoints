@@ -187,19 +187,14 @@ class CronJobController extends Controller
 			    'Content-type: text/html; charset=iso-8859-1' . "\r\n".
 			    'X-Mailer: PHP/' . phpversion();
 
-			    mail($to, $subject, $message, $headers);
+			    
 
 			    if($replacedFound){
-			    	$subject = "HW Photo Points upload failed.";
-			    	$message = "Images failed for these locations because images are already exist. <br/>".$imagesExist;
+			    	$message .= "<br/>Images failed for these locations because images are already exist. <br/>".$imagesExist;
 	            
-					$headers = 'From: webmaster@example.com' . "\r\n" .
-				    'Reply-To: webmaster@example.com' . "\r\n" .
-				    'X-Mailer: PHP/' . phpversion();
-				    mail($to, $subject, $message, $headers);
 			    }
 
-
+			    mail($to, $subject, $message, $headers);
 	           
 			}
 		}	
