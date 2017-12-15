@@ -40,15 +40,22 @@ class CronJobController extends Controller
 				  		// exit;
 
 				  		if(isset($line[0]) && isset($line[1]) && isset($line[2]) && isset($line[3])) {
+				  			$fileName = "";
+				  			if($line[0]) $fileName = $line[0];
+					  		
+					  		$series = "";
 
-					  		$fileName = $line[0];
-					  		$series = strtoupper($line[1]);
-					        $year = $line[2];
-					        $location = strtoupper($line[3]);
-					        print_r($line);
+					  		if($line[1]) $series = strtoupper($line[1]);
+
+					  		$year = "";
+					  		if($line[2]) $year = $line[2];
+
+					  		$location = "";
+
+					        if($line[3]) $location = strtoupper($line[3]);
 					        
-					        echo $filePath = $destinationPath.$fileName;
-					        exit;
+					        $filePath = $destinationPath.$fileName;
+					        
 					        if(file_exists($filePath)){
 
 							    $ext = pathinfo($filePath, PATHINFO_EXTENSION);
