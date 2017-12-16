@@ -190,7 +190,7 @@ class CronJobController extends Controller
 			    
 
 			    if($replacedFound){
-			    	$message .= "<br/><br/><b style='color:red;'>Images failed for these locations because images are already exist.</b> <br/>".$imagesExist;
+			    	$message .= "<br/><br/><b style='color:red;'>Image upload failed for this location due to an existing image in place. Please review the image and if it is incorrectly placed, delete it, before uploading the correct image.</b> <br/>".$imagesExist;
 	            
 			    }
 
