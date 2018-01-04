@@ -46,15 +46,6 @@ class SeriesController extends Controller
         $seriesData = Series::where('name','=',$series)->first();
         $posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
         return response()->json(compact('posts'));  
-
-  //   	$posts = SeriesPosts::select('title')->where('year','=',$year)->get();
-  //   	if($posts->count() > 0){
-		// 	return response()->json(compact('posts'));	
-		// }else{
-		// 	$seriesData = Series::where('name','=',$series)->first();
-		// 	$posts = SeriesPosts::select('title')->where('series_id','=',$seriesData->id)->get();
-		// 	return response()->json(compact('posts'));	
-		// }
     }
 
     //get image type
@@ -484,6 +475,14 @@ class SeriesController extends Controller
                $originalImageName = $year.'/'.$series.'/'.$imageName;
                $thumbName = $year.'/'.$series.'/thumbs/'.$imageName;
             }
+
+          $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location])->exists();
+          
+           if($mediaExist){
+                $response = 'error';
+                $msg = "Image already exist on ".$series."-".$year."-".$location;
+                 return response()->json(compact('response','msg'));  
+            }
         }else{
            $season = $data['season'];
            $image_view = $data['image_view'];
@@ -493,6 +492,14 @@ class SeriesController extends Controller
                $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
                $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
             }
+
+           $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
+
+            if($mediaExist){
+                $response = 'error';
+                $msg = "Image already exist on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
+                 return response()->json(compact('response','msg'));  
+            }  
         }
 
 
