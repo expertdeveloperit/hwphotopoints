@@ -346,7 +346,7 @@ class SeriesController extends Controller
           
            if($mediaExist){
                 $response = 'error';
-                $msg = "Image already exist on ".$series."-".$year."-".$location;
+                $msg = "Image already exists on ".$series."-".$year."-".$location;
                  return response()->json(compact('response','msg'));  
             }
 
@@ -365,7 +365,7 @@ class SeriesController extends Controller
 
             if($mediaExist){
                 $response = 'error';
-                $msg = "Image already exist on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
+                $msg = "Image already exists on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
                  return response()->json(compact('response','msg'));  
             }
 
@@ -480,7 +480,7 @@ class SeriesController extends Controller
           
            if($mediaExist){
                 $response = 'error';
-                $msg = "Image already exist on ".$series."-".$year."-".$location;
+                $msg = "Image already exists on ".$series."-".$year."-".$location;
                  return response()->json(compact('response','msg'));  
             }
         }else{
@@ -497,7 +497,7 @@ class SeriesController extends Controller
 
             if($mediaExist){
                 $response = 'error';
-                $msg = "Image already exist on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
+                $msg = "Image already exists on ".$series."-".$season."-".$year."-".$location."-".$image_view."-".$view;
                  return response()->json(compact('response','msg'));  
             }  
         }
