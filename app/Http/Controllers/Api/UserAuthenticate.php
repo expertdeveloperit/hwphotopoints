@@ -66,9 +66,9 @@ class UserAuthenticate extends Controller
             $subject = "HW Photo Points Reset Password";
             $link = "http://wphackstop.com/reset/password/".$key;
             $txt = "To reset your password please click on this <a href=".$link.">link</a> and follow the instructions.";
-            $headers = "From: webmaster@example.com" . "\r\n" .
+            $headers = "From: hw@example.com" . "\r\n" .
             "CC: somebodyelse@example.com";
-
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
             mail($to,$subject,$txt,$headers);
             $msg = "We have sent you an email, please use link to reset password.";
             $status = "true";
