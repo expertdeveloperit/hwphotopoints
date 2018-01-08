@@ -64,7 +64,7 @@ class UserAuthenticate extends Controller
 
             $to = $user->email;
             $subject = "HW Photo Points Reset Password";
-            $link = "http://photos.hwphotopoints.org.uk/reset/password/".$key;
+            $link = "http://wphackstop.com/reset/password/".$key;
             $txt = "To reset your password please click on this <a href=".$link.">link</a> and follow the instructions.";
             $headers = "From: webmaster@example.com" . "\r\n" .
             "CC: somebodyelse@example.com";
