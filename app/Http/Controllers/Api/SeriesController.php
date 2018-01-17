@@ -598,7 +598,9 @@ class SeriesController extends Controller
     public function imageDelete(Request $request, $id = null)
     {
         
-       $user = Auth::user(); 
+       $user = Auth::user();
+       return $user->userMeta;
+       
         $mediaInfo = $user->userMedia->where('id',$id)->first();  
         if($mediaInfo){
             if($mediaInfo->delete()){
