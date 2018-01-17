@@ -31,6 +31,7 @@ class CheckSuperAdmin
             if(Auth::user()->userMeta->role == '1'){
                 return $next($request);
             }else{
+                Auth::logout();
                 return redirect()->guest('/');
             }           
         }
