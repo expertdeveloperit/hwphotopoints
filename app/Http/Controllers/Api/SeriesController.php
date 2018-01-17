@@ -599,19 +599,28 @@ class SeriesController extends Controller
     {
         
        $user = Auth::user();
-       return $user->userMeta;
-       
-        $mediaInfo = $user->userMedia->where('id',$id)->first();  
-        if($mediaInfo){
-            if($mediaInfo->delete()){
-                $msg = "Image has been deleted.";
-                $status = "true";
-                return response()->json(compact('status','msg'));
+        if($user->userMeta->role=="1"){
+            $mediaInfo = MediaInformation::where('id',$id)->first();  
+            if($mediaInfo){
+                if($mediaInfo->delete()){
+                    $msg = "Image has been deleted.";
+                    $status = "true";
+                    return response()->json(compact('status','msg'));
+                }
+            }    
+        }else{ 
+            $mediaInfo = $user->userMedia->where('id',$id)->first();  
+            if($mediaInfo){
+                if($mediaInfo->delete()){
+                    $msg = "Image has been deleted.";
+                    $status = "true";
+                    return response()->json(compact('status','msg'));
+                }
+            }else{
+                    $msg = "You have not permission to delete this record.";
+                    $status = "false";
+                    return response()->json(compact('status','msg'));
             }
-        }else{
-                $msg = "You have not permission to delete this record.";
-                $status = "false";
-                return response()->json(compact('status','msg'));
         }
 
     }
