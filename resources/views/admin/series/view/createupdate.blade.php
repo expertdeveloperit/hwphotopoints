@@ -84,7 +84,7 @@
                     <div class="box-body">
                       <div class="form-group">
                         <label>Image View</label>
-                        <input type="text" name="image_view" value="{{old('image_view')}}" class="form-control" id="titile" placeholder="SNG">
+                        <input type="text" name="image_view" value="{{old('image_view')}}" class="form-control" id="titile" placeholder="SIN">
                       </div>
                       <div class="form-group">
                         <label>Value</label>
