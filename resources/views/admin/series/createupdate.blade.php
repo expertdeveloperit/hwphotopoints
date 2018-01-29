@@ -32,7 +32,7 @@
                     <div class="box-body">
                       <div class="form-group">
                         <label>Post Title</label>
-                        <input type="text" name="title" value="{{$editseries['title']}}" class="form-control" id="titile" placeholder="Series Title">
+                        <input type="text" name="title" value="{{$editseries['title']}}" class="form-control" id="titile" placeholder="Post Title">
                       </div>
                       <div class="form-group">
                         <label>Year</label>
@@ -88,7 +88,7 @@
                     <div class="box-body">
                       <div class="form-group">
                         <label>Post Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" class="form-control" id="titile" placeholder="Series Title">
+                        <input type="text" name="title" value="{{ old('title') }}" class="form-control" id="titile" placeholder="Post Title">
                       </div>
                       <div class="form-group">
                         <label>Year</label>
