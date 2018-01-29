@@ -73,7 +73,7 @@ class UserAuthenticate extends Controller
             mail($to,$subject,$txt,$headers);
             $msg = "We have sent you an email, please use link to reset password.";
             $status = "true";
-            return response()->json(compact('msg','status','link'));            
+            return response()->json(compact('msg','status'));            
         }else{
             $msg = "This Email does't exist.";
             $status = "false";
