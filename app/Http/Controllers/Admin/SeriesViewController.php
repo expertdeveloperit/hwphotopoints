@@ -35,7 +35,6 @@ class SeriesViewController extends Controller
         $rules = array(
             'image_view' => 'required',
             'value'=>'required',
-            'pan_view'=>'required',
         );
         $validator = Validator::make($data, $rules);
         if($validator->passes()){
