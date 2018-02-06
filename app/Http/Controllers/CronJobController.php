@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\MediaInformation;
+use App\SeriesPostViews;
 use App\CronJob;
 use App\User;
 use Image;
@@ -38,6 +39,8 @@ class CronJobController extends Controller
 				$index= 0;
 				$imagesExist = "";
 				$replacedFound = false;
+				$viewNotExist = "";
+				$viewNotExistFound = false;
 				while (($line = fgetcsv($file)) !== FALSE) {
 				  	if($index > 0){
 				  		
@@ -87,16 +90,21 @@ class CronJobController extends Controller
 						           $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
 						           $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
 						            
-						            
+						            $viewExist = SeriesPostViews::where(['value'=>$view])->exists();
 
-						            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
-
-						            if($mediaExist){
+						            if(!$viewExist){
 						            	$upload = false;
-						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
-						            	$replacedFound = true;
-						            }
+							            $viewNotExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
+							            	$viewNotExistFound = true;
+						            }else{
+							            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
 
+							            if($mediaExist){
+							            	$upload = false;
+							            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
+							            	$replacedFound = true;
+							            }
+						        	}
 						        }
 
 
@@ -158,9 +166,8 @@ class CronJobController extends Controller
 						        }
 						    }else{
 
-
 						    }	
-						    } 
+						  	} 
 							}
 						}       
 					}
@@ -191,6 +198,10 @@ class CronJobController extends Controller
 
 			    if($replacedFound){
 			    	$message .= "<br/><br/><b style='color:red;'>Image upload failed for this location due to an existing image in place. Please review the image and if it is incorrectly placed, delete it, before uploading the correct image.</b> <br/>".$imagesExist;
+	            
+			    }
+			    if($viewNotExistFound){
+			    	$message .= "<br/><br/><b style='color:red;'>Image upload failed  due to the view for that location does not exist. Please review the views name and upload the images only on existing views.</b> <br/>".$viewNotExist;
 	            
 			    }
 
