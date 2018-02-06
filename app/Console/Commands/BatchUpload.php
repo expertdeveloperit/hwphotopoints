@@ -39,6 +39,8 @@ class BatchUpload extends Command
     public function handle()
     {
         //call to cron job function
-        $data =   (new CronJobController)->index();      
+        $data =   (new CronJobController)->index();  
+        $data =   (new CronJobController)->deleteExtra();  
+
     }
 }

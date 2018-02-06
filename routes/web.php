@@ -20,6 +20,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/crons','CronJobController@index');
+Route::get('/cronsdelete','CronJobController@deleteExtra');
 
 Route::get('logout','Auth\LoginController@logout');
 //admin Panel

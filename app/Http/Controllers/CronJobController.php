@@ -228,4 +228,10 @@ class CronJobController extends Controller
 	    }
 	}
 
+	public function deleteExtra(){
+		$formatted = date('Y-m-d H:i:s', strtotime("-1 months"));
+		CronJob::where('created_at',"<",$formatted)->delete();
+		return "false";
+	}
+
 }
