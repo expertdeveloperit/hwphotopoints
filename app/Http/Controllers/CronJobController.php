@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\MediaInformation;
+use App\SeriesPosts;
 use App\SeriesPostViews;
 use App\CronJob;
 use App\User;
@@ -90,21 +91,30 @@ class CronJobController extends Controller
 						           $originalImageName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/'.$imageName;
 						           $thumbName = $year.'/'.$series.'/'.$season.'/'.$image_view.'/thumbs/'.$imageName;
 						            
-						            $viewExist = SeriesPostViews::where(['value'=>$view])->exists();
+						           $locationCheck = SeriesPosts::where(['title'=>$location])->first();
+						           if($locationCheck && $locationCheck->id){
+						           		 $viewExist = SeriesPostViews::where(['series_list_id'=>$locationCheck->id,'value'=>$view])->exists();
 
-						            if(!$viewExist){
-						            	$upload = false;
-							            $viewNotExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
-							            	$viewNotExistFound = true;
-						            }else{
-							            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
-
-							            if($mediaExist){
+							            if(!$viewExist){
 							            	$upload = false;
-							            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
-							            	$replacedFound = true;
-							            }
-						        	}
+								            $viewNotExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
+								            	$viewNotExistFound = true;
+							            }else{
+								            $mediaExist = MediaInformation::where(['series'=>$series,'year'=>$year,'post_name'=>$location,'season'=>$season,'image_view'=>$image_view,'views'=>$view])->exists();
+
+								            if($mediaExist){
+								            	$upload = false;
+								            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
+								            	$replacedFound = true;
+								            }
+							        	}
+						           }else{
+						           		$upload = false;
+						            	$imagesExist .= $series." - ".$season." - ".$year." - ".$location." - ".$image_view." - ".$view."<br/>";
+						            	$replacedFound = true;
+						           }
+
+						           
 						        }
 
 
@@ -204,7 +214,7 @@ class CronJobController extends Controller
 			    	$message .= "<br/><br/><b style='color:red;'>Image upload failed  due to the view for that location does not exist. Please review the views name and upload the images only on existing views.</b> <br/>".$viewNotExist;
 	            
 			    }
-
+			    echo $message;
 			    mail($to, $subject, $message, $headers);
 	           
 			}
