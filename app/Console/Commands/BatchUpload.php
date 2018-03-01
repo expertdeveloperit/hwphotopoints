@@ -38,7 +38,7 @@ class BatchUpload extends Command
      */
     public function handle()
     {
-        \Log::info("Cron JOb Trigger");
+        //\Log::info("Cron JOb Trigger");
         //call to cron job function
         $data =   (new CronJobController)->index();  
         $data =   (new CronJobController)->deleteExtra();  

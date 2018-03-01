@@ -123,12 +123,14 @@ class CronJobController extends Controller
 						        //save to amazon server to original image
 						        Storage::disk('s3')->put($originalImageName, file_get_contents($filePath),'public');
 
-						        
+						       
 						        //thumbnails image create and save
+						       \Log::info("Before");
 						        $thumb = Image::make($filePath)->resize(225, 150,function($constraint){
 						            $constraint->aspectRatio(); //maintain image ratio
 						        });
-
+						       
+                                \Log::info("After");
 						        $filePathSave = $destinationPath.'thumb-'.$imageName;
 						        $thumb->save($filePathSave);
 

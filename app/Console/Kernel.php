@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('custom:batchuploadfiles')->everyTenMinutes();
+         $schedule->command('custom:batchuploadfiles')->everyTenMinutes(); //everyTenMinutes();
     }
 
     /**

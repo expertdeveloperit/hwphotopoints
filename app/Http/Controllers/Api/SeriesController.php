@@ -162,7 +162,7 @@ class SeriesController extends Controller
         $sviews = MediaInformation::select('views')->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->groupBy('views')->orderByRaw('FIELD(views,'.$ids_ordered.')')->get();
         $summerData = array();
         foreach ($sviews as $key => $value) {
-               $sdata = MediaInformation::where('user_id','=',$userId)->where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->where('views',$value->views)->orderBy('year')->get();     
+               $sdata = MediaInformation::where('series','=','P')->where('post_name','=',$postName)->where('season','sum')->where('views',$value->views)->orderBy('year')->get();     
                $summerData[$key]['view'] =  $value->views;
                $summerData[$key]['data'] = $sdata;
         }
